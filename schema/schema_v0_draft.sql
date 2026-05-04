@@ -71,6 +71,7 @@ CREATE TABLE IF NOT EXISTS fonts (
     visual_formality INTEGER,
     description TEXT,
     description_ja TEXT,
+    typical_use_size_pt TEXT,
     references_json TEXT
 );
 
@@ -163,6 +164,9 @@ CREATE TABLE IF NOT EXISTS design_patterns (
     grid_system_id INTEGER REFERENCES grid_systems(id),
     trim_size_id INTEGER REFERENCES trim_sizes(id),
     example_works_json TEXT,
+    example_works TEXT,
+    inspiration_designer TEXT,
+    primary_face TEXT,
     related_patterns TEXT,
     use_when TEXT,
     use_when_ja TEXT,
@@ -196,6 +200,7 @@ CREATE TABLE IF NOT EXISTS designers (
     influenced TEXT,
     awards TEXT,
     bio_ja TEXT,
+    key_works TEXT,
     references_json TEXT
 );
 
@@ -286,7 +291,12 @@ CREATE TABLE IF NOT EXISTS works_corpus (
     significance_ja TEXT,
     image_refs_json TEXT,
     pattern_ids TEXT,
-    references_json TEXT
+    references_json TEXT,
+    publisher_text TEXT,
+    designer_or_director TEXT,
+    designer_name TEXT,
+    typography_face_used TEXT,
+    award_or_recognition TEXT
 );
 
 -- ============================================================

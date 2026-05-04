@@ -9,7 +9,7 @@ ROOT = Path(__file__).resolve().parent.parent
 DB_PATH = ROOT / "data" / "editorial_design.db"
 SEED_DIR = ROOT / "data" / "seed"
 
-TABLE_FROM_STEM = re.compile(r"_C\d+$")
+TABLE_FROM_STEM = re.compile(r"_(C|Q)\d+$")
 
 # Field aliases by table — agents sometimes write slightly different names.
 ALIASES = {
@@ -28,6 +28,7 @@ ALIASES = {
         "design_name_ja": "name_ja",
         "style": "name",
         "structural_role_ja": "structural_role_ja_alias",
+        "example_works_text": "example_works",
     },
     "grid_systems": {
         "design_name": "name",
@@ -164,7 +165,8 @@ def main() -> None:
     con = sqlite3.connect(DB_PATH)
     total = 0
     try:
-        for jsonl in sorted(SEED_DIR.glob("*.jsonl")):
+        sources = list(sorted(SEED_DIR.glob("*.jsonl"))) + list(sorted((ROOT / "data" / "seed_q").glob("*.jsonl")))
+        for jsonl in sources:
             table = resolve_table(jsonl.stem)
             records = load_jsonl(jsonl)
             if not records:

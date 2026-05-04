@@ -3,31 +3,31 @@
 ## Coverage
 | Table | Count | Target | Coverage |
 |---|---:|---:|---:|
-| fonts | 630 | 750 | 84.0% |
+| fonts | 764 | 750 | 101.9% |
 | font_designers | 23 | — | — |
 | font_pairings | 50 | — | — |
-| designers | 177 | 260 | 68.1% |
+| designers | 243 | 260 | 93.5% |
 | studios_publishers | 10 | 100 | 10.0% |
 | schools_movements | 15 | 30 | 50.0% |
-| design_patterns | 6580 | 10000 | 65.8% |
-| copy_techniques | 999 | 1000 | 99.9% |
+| design_patterns | 363 | 10000 | 3.6% |
+| copy_techniques | 1127 | 1000 | 112.7% |
 | copywriters | 40 | 40 | 100.0% |
-| theory_concepts | 227 | 380 | 59.7% |
+| theory_concepts | 231 | 380 | 60.8% |
 | theorists | 55 | — | — |
 | grid_systems | 40 | 100 | 40.0% |
 | layout_canons | 0 | — | — |
-| works_corpus | 2653 | 5000 | 53.1% |
+| works_corpus | 2594 | 5000 | 51.9% |
 | trim_sizes | 30 | — | — |
-| **TOTAL** | **11529** | | |
+| **TOTAL** | **5585** | | |
 
 ## JSON Field Validity
-- `design_patterns.coordinate_json`: 6580/6580 valid JSON
-- `design_patterns.typography_json`: 1000/1000 valid JSON
+- `design_patterns.coordinate_json`: 363/363 valid JSON
+- `design_patterns.typography_json`: 0/0 valid JSON
 - `grid_systems.construction_rule_json`: 40/40 valid JSON
 - `works_corpus.coordinate_json`: 0/0 valid JSON
 
 ## Duplicates
-- `fonts` by (name, foundry): 16 duplicate groups
-- `designers` by (name): 11 duplicate groups
-- `design_patterns` by (pattern_code): 0 duplicate groups
-- `works_corpus` by (title, year): 47 duplicate groups
+- `fonts` by (name, foundry): 0 duplicate groups
+- `designers` by (name): 24 duplicate groups
+- `design_patterns` by (pattern_code): 1 duplicate groups
+- `works_corpus` by (title, year): 0 duplicate groups
