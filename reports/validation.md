@@ -7,7 +7,7 @@
 | font_designers | 23 | — | — |
 | font_pairings | 50 | — | — |
 | designers | 243 | 260 | 93.5% |
-| studios_publishers | 10 | 100 | 10.0% |
+| studios_publishers | 76 | 100 | 76.0% |
 | schools_movements | 15 | 30 | 50.0% |
 | design_patterns | 363 | 10000 | 3.6% |
 | copy_techniques | 1127 | 1000 | 112.7% |
@@ -15,10 +15,10 @@
 | theory_concepts | 231 | 380 | 60.8% |
 | theorists | 55 | — | — |
 | grid_systems | 40 | 100 | 40.0% |
-| layout_canons | 0 | — | — |
-| works_corpus | 2594 | 5000 | 51.9% |
+| layout_canons | 30 | — | — |
+| works_corpus | 2893 | 5000 | 57.9% |
 | trim_sizes | 30 | — | — |
-| **TOTAL** | **5585** | | |
+| **TOTAL** | **5980** | | |
 
 ## JSON Field Validity
 - `design_patterns.coordinate_json`: 363/363 valid JSON

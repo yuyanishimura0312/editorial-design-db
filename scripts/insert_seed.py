@@ -9,7 +9,7 @@ ROOT = Path(__file__).resolve().parent.parent
 DB_PATH = ROOT / "data" / "editorial_design.db"
 SEED_DIR = ROOT / "data" / "seed"
 
-TABLE_FROM_STEM = re.compile(r"_(C|Q)\d+$")
+TABLE_FROM_STEM = re.compile(r"_(C|Q|R)\d+$")
 
 # Field aliases by table — agents sometimes write slightly different names.
 ALIASES = {
