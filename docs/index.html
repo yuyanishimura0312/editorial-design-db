@@ -3,233 +3,334 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Editorial Design Knowledge DB | EDD</title>
+<title>Editorial Design Knowledge DB | MIRATUKU</title>
 <meta name="description" content="紙面デザイン世界ベストプラクティスデータベース。書籍・雑誌・レポート・新聞・カタログのタイポグラフィ・グリッド・コピー技法を6,195レコードで構造化">
+<link rel="icon" href="https://esse-sense.com/favicon.ico">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@400;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=Noto+Serif+JP:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
 :root {
-  --accent: #CC1400;
-  --bg: #ffffff;
-  --bg-soft: #fafaf8;
-  --text: #1a1a1a;
-  --text-soft: #555;
-  --border: #e5e5e3;
-  --max: 1200px;
+  --bg: #FFFFFF;
+  --text: #121212;
+  --text-secondary: #555555;
+  --text-muted: #999999;
+  --accent: #121212;
+  --accent-warm: #CC1400;
+  --border: #D9D9D9;
+  --border-light: #E8E8E6;
+  --surface: #F7F7F5;
+  --card: #FFFFFF;
+  --font: "Noto Sans JP", "Hiragino Sans", "Hiragino Kaku Gothic ProN", sans-serif;
+  --font-serif: "Noto Serif JP", "Hiragino Mincho ProN", Georgia, serif;
+  --radius: 0px;
 }
-* { box-sizing: border-box; margin: 0; padding: 0; }
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #121212;
+    --text: #E0E0E0;
+    --text-secondary: #A0A0A0;
+    --text-muted: #666666;
+    --accent: #E0E0E0;
+    --accent-warm: #E05040;
+    --border: #333333;
+    --border-light: #2A2A2A;
+    --surface: #1A1A1A;
+    --card: #1E1E1E;
+  }
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
 html { scroll-behavior: smooth; }
 body {
-  font-family: 'Noto Sans JP', 'Inter', system-ui, sans-serif;
-  color: var(--text);
+  font-family: var(--font);
   background: var(--bg);
-  line-height: 1.7;
+  color: var(--text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
   font-feature-settings: "palt";
 }
-.container { max-width: var(--max); margin: 0 auto; padding: 0 24px; }
 
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* Header */
 header {
   border-bottom: 1px solid var(--border);
-  padding: 32px 0 24px;
+  padding: 60px 0 40px;
 }
 .brand {
-  font-family: 'Noto Serif JP', serif;
-  font-size: 14px;
-  letter-spacing: 0.15em;
-  color: var(--accent);
-  font-weight: 700;
-  margin-bottom: 8px;
+  font-family: var(--font);
+  font-size: 0.78rem;
+  letter-spacing: 0.18em;
+  color: var(--accent-warm);
+  font-weight: 500;
+  margin-bottom: 12px;
+  text-transform: uppercase;
 }
 h1 {
-  font-family: 'Noto Serif JP', serif;
-  font-size: clamp(28px, 4vw, 48px);
-  font-weight: 700;
-  letter-spacing: -0.01em;
-  margin-bottom: 12px;
-  line-height: 1.2;
+  font-family: var(--font-serif);
+  font-size: 2rem;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  margin-bottom: 16px;
+  line-height: 1.4;
 }
 .subtitle {
-  font-size: 16px;
-  color: var(--text-soft);
-  max-width: 800px;
-  line-height: 1.7;
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+  line-height: 1.8;
+  max-width: 720px;
+}
+.subtitle strong { color: var(--text); font-weight: 700; }
+
+.header-meta {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+  margin-top: 24px;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+.header-meta span {
+  border-left: 2px solid var(--accent-warm);
+  padding-left: 10px;
 }
 
+/* Nav */
 nav {
   position: sticky;
   top: 0;
-  background: rgba(255,255,255,0.96);
-  backdrop-filter: blur(8px);
+  background: var(--bg);
   border-bottom: 1px solid var(--border);
   padding: 12px 0;
   z-index: 100;
-  margin-top: 24px;
+  font-size: 0.82rem;
 }
 nav ul {
   list-style: none;
   display: flex;
   gap: 24px;
   flex-wrap: wrap;
-  font-size: 13px;
 }
 nav a {
-  color: var(--text);
+  color: var(--text-secondary);
   text-decoration: none;
-  border-bottom: 1px solid transparent;
-  padding-bottom: 2px;
+  transition: color 0.2s;
+  letter-spacing: 0.02em;
 }
-nav a:hover { border-bottom-color: var(--accent); color: var(--accent); }
+nav a:hover { color: var(--accent-warm); }
 
-section { padding: 64px 0; border-bottom: 1px solid var(--border); }
-section h2 {
-  font-family: 'Noto Serif JP', serif;
-  font-size: 28px;
-  font-weight: 700;
-  margin-bottom: 24px;
-  padding-bottom: 12px;
-  border-bottom: 2px solid var(--accent);
-  display: inline-block;
+/* Sections */
+section {
+  padding: 56px 0;
+  border-bottom: 1px solid var(--border-light);
 }
-section p { margin-bottom: 16px; max-width: 800px; }
+.section-header { margin-bottom: 8px; }
+.section-title {
+  font-family: var(--font-serif);
+  font-size: 1.4rem;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+}
+.section-subtitle {
+  display: block;
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+.section-description {
+  font-size: 0.86rem;
+  color: var(--text-secondary);
+  line-height: 1.8;
+  max-width: 720px;
+  margin: 16px 0 32px;
+}
 
+/* Stats */
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 16px;
-  margin: 32px 0;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 1px;
+  margin: 24px 0;
+  background: var(--border-light);
+  border: 1px solid var(--border-light);
 }
 .stat-card {
-  background: var(--bg-soft);
-  border-left: 3px solid var(--accent);
+  background: var(--card);
   padding: 20px 16px;
 }
 .stat-num {
-  font-family: 'Inter', sans-serif;
-  font-size: 32px;
-  font-weight: 600;
-  color: var(--accent);
-  line-height: 1;
+  font-family: var(--font-serif);
+  font-size: 1.6rem;
+  font-weight: 900;
+  color: var(--accent-warm);
+  line-height: 1.1;
+  letter-spacing: 0.01em;
 }
 .stat-label {
-  font-size: 13px;
-  color: var(--text-soft);
-  margin-top: 8px;
+  font-size: 0.74rem;
+  color: var(--text-secondary);
+  margin-top: 6px;
+  letter-spacing: 0.02em;
 }
 
-.controls {
-  display: flex;
-  gap: 12px;
-  margin: 24px 0;
-  flex-wrap: wrap;
-}
-.controls select, .controls input {
-  font-family: inherit;
-  font-size: 14px;
-  padding: 10px 14px;
-  border: 1px solid var(--border);
-  background: var(--bg);
-  color: var(--text);
-  min-width: 180px;
-}
-.controls input { flex: 1; min-width: 240px; }
-.controls select:focus, .controls input:focus {
-  outline: 2px solid var(--accent);
-  outline-offset: -1px;
-}
-
-.results-meta {
-  font-size: 13px;
-  color: var(--text-soft);
-  margin-bottom: 16px;
-}
-
-.cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 16px;
-}
-.card {
-  background: var(--bg-soft);
-  border: 1px solid var(--border);
-  padding: 20px;
-  font-size: 14px;
-}
-.card h3 {
-  font-family: 'Noto Serif JP', serif;
-  font-size: 16px;
-  font-weight: 700;
-  margin-bottom: 8px;
-  color: var(--text);
-}
-.card .meta {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  font-size: 11px;
-  color: var(--text-soft);
-  margin-bottom: 12px;
-}
-.tag {
-  background: #fff;
-  border: 1px solid var(--border);
-  padding: 2px 8px;
-  border-radius: 2px;
-}
-.tag.accent { color: var(--accent); border-color: var(--accent); }
-.card .desc { color: var(--text-soft); line-height: 1.6; }
-.card .extra {
-  margin-top: 12px;
-  padding-top: 12px;
-  border-top: 1px dashed var(--border);
-  font-size: 12px;
-  color: var(--text-soft);
-}
-
-.pager {
-  display: flex;
-  gap: 8px;
-  justify-content: center;
-  margin-top: 32px;
-  flex-wrap: wrap;
-}
-.pager button {
-  font-family: inherit;
-  background: var(--bg);
-  border: 1px solid var(--border);
-  padding: 8px 14px;
-  cursor: pointer;
-  font-size: 13px;
-}
-.pager button.active { background: var(--accent); color: white; border-color: var(--accent); }
-.pager button:hover:not(.active) { border-color: var(--accent); color: var(--accent); }
-
+/* Intro grid */
 .intro-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 24px;
   margin-top: 32px;
 }
+.intro-block { padding: 0; }
 .intro-block h3 {
-  font-family: 'Noto Serif JP', serif;
-  font-size: 18px;
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  font-weight: 700;
   margin-bottom: 8px;
-  color: var(--accent);
+  color: var(--text);
+  border-left: 3px solid var(--accent-warm);
+  padding-left: 10px;
+}
+.intro-block p {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  line-height: 1.8;
 }
 
+/* Controls */
+.controls {
+  display: flex;
+  gap: 8px;
+  margin: 20px 0;
+  flex-wrap: wrap;
+}
+.controls select, .controls input {
+  font-family: var(--font);
+  font-size: 0.82rem;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  min-width: 160px;
+  border-radius: var(--radius);
+}
+.controls input { flex: 1; min-width: 200px; }
+.controls select:focus, .controls input:focus {
+  outline: 1px solid var(--accent-warm);
+  outline-offset: -1px;
+  border-color: var(--accent-warm);
+}
+
+.results-meta {
+  font-size: 0.74rem;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+  letter-spacing: 0.02em;
+}
+
+/* Cards */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1px;
+  background: var(--border-light);
+  border: 1px solid var(--border-light);
+}
+.card {
+  background: var(--card);
+  padding: 20px;
+  font-size: 0.82rem;
+}
+.card h3 {
+  font-family: var(--font-serif);
+  font-size: 0.96rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--text);
+  letter-spacing: 0.01em;
+  line-height: 1.5;
+}
+.card .meta {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+  letter-spacing: 0.02em;
+}
+.tag {
+  background: var(--surface);
+  border: 1px solid var(--border-light);
+  padding: 2px 8px;
+}
+.tag.accent { color: var(--accent-warm); border-color: var(--accent-warm); }
+.card .desc {
+  color: var(--text-secondary);
+  line-height: 1.7;
+  font-size: 0.82rem;
+}
+.card .extra {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border-light);
+  font-size: 0.74rem;
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+
+/* Pager */
+.pager {
+  display: flex;
+  gap: 4px;
+  justify-content: center;
+  margin-top: 32px;
+  flex-wrap: wrap;
+}
+.pager button {
+  font-family: var(--font);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  padding: 6px 12px;
+  cursor: pointer;
+  font-size: 0.78rem;
+  color: var(--text);
+  transition: all 0.15s;
+}
+.pager button.active {
+  background: var(--accent-warm);
+  color: #FFFFFF;
+  border-color: var(--accent-warm);
+}
+.pager button:hover:not(.active):not(:disabled) {
+  border-color: var(--accent-warm);
+  color: var(--accent-warm);
+}
+
+/* Footer */
 footer {
-  padding: 48px 0 64px;
-  font-size: 13px;
-  color: var(--text-soft);
+  padding: 40px 0 60px;
+  font-size: 0.78rem;
+  color: var(--text-muted);
   text-align: center;
+  letter-spacing: 0.02em;
 }
-footer a { color: var(--accent); text-decoration: none; }
-
-.loading { text-align: center; padding: 48px; color: var(--text-soft); }
+footer a {
+  color: var(--accent-warm);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+footer a:hover { border-bottom-color: var(--accent-warm); }
 
 @media (max-width: 640px) {
   .controls select, .controls input { min-width: 100%; }
-  nav ul { gap: 12px; font-size: 12px; }
+  nav ul { gap: 14px; font-size: 0.76rem; }
+  h1 { font-size: 1.6rem; }
 }
 </style>
 </head>
@@ -240,6 +341,12 @@ footer a { color: var(--accent); text-decoration: none; }
     <div class="brand">EDITORIAL DESIGN KNOWLEDGE DB</div>
     <h1>紙面デザインの世界知識基盤</h1>
     <p class="subtitle">書籍・雑誌・レポート・新聞・カタログ・ZINEの紙面デザインに関する世界中のベストプラクティスを<strong>6,195レコード</strong>で構造化したナレッジベース。タイポグラフィ理論・グリッドシステム・書体・デザイナー・伝説的作例・コピー技法を統合。学習ソースは多言語、最終アウトプットは日本語制作支援。</p>
+    <div class="header-meta">
+      <span>15テーブル</span>
+      <span>座標JSON 100% 有効</span>
+      <span>2026年5月公開</span>
+      <span>NPO法人ミラツク</span>
+    </div>
   </div>
 </header>
 
@@ -249,7 +356,7 @@ footer a { color: var(--accent); text-decoration: none; }
       <li><a href="#overview">概要</a></li>
       <li><a href="#stats">統計</a></li>
       <li><a href="#patterns">デザインパターン</a></li>
-      <li><a href="#works">作例コーパス</a></li>
+      <li><a href="#works">作例</a></li>
       <li><a href="#fonts">フォント</a></li>
       <li><a href="#designers">巨匠</a></li>
       <li><a href="#theory">理論</a></li>
@@ -260,25 +367,28 @@ footer a { color: var(--accent); text-decoration: none; }
 
 <section id="overview">
   <div class="container">
-    <h2>概要</h2>
-    <p>本データベース（Editorial Design Knowledge DB、以下EDD）は、書籍・雑誌・レポート・新聞・カタログ・ZINE・パンフレットといった印刷・編集メディアにおける世界中のデザイン知識を、機械可読な形で構造化したナレッジベースである。学習ソースは英語・フランス語・ドイツ語・日本語・中国語などの多言語にわたり、最終的な活用想定は日本語紙面制作の支援に特化している。</p>
-    <p>本DBの最大の特徴は、各デザインパターンに座標構造のJSONデータを持たせている点にある。判型寸法、マージン4辺、版面領域、段組数、ガター幅、ベースライングリッド、本文書体サイズ、行送り、字送り、字詰め、色彩階層、視覚階層レベル等が全てJSONフィールドとして格納されており、過去のベストプラクティスを参照しつつ、AIによる自動レイアウト生成、類似紙面の検索、統計的ジャンル分析などへの応用が可能である。</p>
+    <div class="section-header">
+      <div class="section-title">概要</div>
+      <span class="section-subtitle">Overview</span>
+    </div>
+    <p class="section-description">本データベース（Editorial Design Knowledge DB、以下EDD）は、書籍・雑誌・レポート・新聞・カタログ・ZINE・パンフレットといった印刷・編集メディアにおける世界中のデザイン知識を、機械可読な形で構造化したナレッジベースである。学習ソースは英語・フランス語・ドイツ語・日本語・中国語などの多言語にわたり、最終的な活用想定は日本語紙面制作の支援に特化している。</p>
+    <p class="section-description">本DBの最大の特徴は、各デザインパターンに座標構造のJSONデータを持たせている点にある。判型寸法、マージン4辺、版面領域、段組数、ガター幅、ベースライングリッド、本文書体サイズ、行送り、字送り、字詰め、色彩階層、視覚階層レベル等が全てJSONフィールドとして格納されており、過去のベストプラクティスを参照しつつ、AIによる自動レイアウト生成、類似紙面の検索、統計的ジャンル分析などへの応用が可能である。</p>
     <div class="intro-grid">
       <div class="intro-block">
-        <h3>L0–L2: 基盤層</h3>
-        <p>タイポグラフィ理論、グリッドシステム、判型、古典カノン。Bringhurst・Tschichold・Hochuli・Müller-Brockmann・鳥海修・小林章・府川充男ら理論家の業績と、van de Graaf・Tschichold・Rosarivoらの古典的版面構成法を体系化。</p>
+        <h3>L0–L2 基盤層</h3>
+        <p>タイポグラフィ理論、グリッドシステム、判型、古典カノン。Bringhurst・Tschichold・Hochuli・Müller-Brockmann・鳥海修・小林章・府川充男ら理論家の業績と、van de Graaf・Tschichold・Rosarivoらの古典版面構成法を体系化。</p>
       </div>
       <div class="intro-block">
-        <h3>L3: パターン層</h3>
+        <h3>L3 パターン層</h3>
         <p>363件の高品質デザインパターンを実在する作品・出版社・デザイナーに紐付けて収録。各パターンには判型・マージン・段組・ベースライングリッド・基本書体・行送り・字詰めなどの座標JSONが100%付与されている。</p>
       </div>
       <div class="intro-block">
-        <h3>L4: 巨匠・組織層</h3>
+        <h3>L4 巨匠・組織層</h3>
         <p>杉浦康平、平野甲賀、鈴木一誌、祖父江慎、原研哉、堀内誠一らの日本のブックデザイン・雑誌アートディレクションの巨匠から、Tschichold・Massin・Boom・Mau・Brodovitch・Brody・Carsonら海外巨匠まで243名を網羅。</p>
       </div>
       <div class="intro-block">
-        <h3>L5–L6: 言葉と作例層</h3>
-        <p>書籍タイトル構文型・帯コピー・雑誌見出し・リード・キャプション技法を1,127件収録。さらに、Penguin・Faber・Suhrkamp・anan・POPEYE・BRUTUS・花椿・Harper's Bazaar等の伝説的作例2,893件を収録。</p>
+        <h3>L5–L6 言葉と作例層</h3>
+        <p>書籍タイトル構文型・帯コピー・雑誌見出し・リード・キャプション技法を1,127件収録。Penguin・Faber・Suhrkamp・anan・POPEYE・BRUTUS・花椿・Harper's Bazaar等の伝説的作例2,893件を収録。</p>
       </div>
     </div>
   </div>
@@ -286,23 +396,25 @@ footer a { color: var(--accent); text-decoration: none; }
 
 <section id="stats">
   <div class="container">
-    <h2>統計</h2>
-    <p>合計6,195レコードを15テーブルに格納。すべてのデザインパターンの座標JSONは妥当性検証で100%パスしている。</p>
+    <div class="section-header">
+      <div class="section-title">統計</div>
+      <span class="section-subtitle">Statistics</span>
+    </div>
+    <p class="section-description">合計6,195レコードを15テーブルに格納。すべてのデザインパターンの座標JSONは妥当性検証で100%パス。</p>
     <div class="stats-grid" id="statsGrid"></div>
   </div>
 </section>
 
 <section id="patterns">
   <div class="container">
-    <h2>デザインパターン</h2>
-    <p>実在の出版物・デザイナーに紐付いた紙面デザインパターン363件。各レコードに座標JSONを完備。</p>
+    <div class="section-header">
+      <div class="section-title">デザインパターン</div>
+      <span class="section-subtitle">Design Patterns / 363</span>
+    </div>
+    <p class="section-description">実在の出版物・デザイナーに紐付いた紙面デザインパターン363件。各レコードに座標JSONを完備。</p>
     <div class="controls">
-      <select id="patternMedium">
-        <option value="">すべての媒体</option>
-      </select>
-      <select id="patternEra">
-        <option value="">すべての時代</option>
-      </select>
+      <select id="patternMedium"><option value="">すべての媒体</option></select>
+      <select id="patternEra"><option value="">すべての時代</option></select>
       <input type="text" id="patternSearch" placeholder="名前・記述で検索...">
     </div>
     <div class="results-meta" id="patternMeta"></div>
@@ -313,8 +425,11 @@ footer a { color: var(--accent); text-decoration: none; }
 
 <section id="works">
   <div class="container">
-    <h2>作例コーパス</h2>
-    <p>世界の伝説的書籍・雑誌・レポート2,893件。実在する出版物のみを収録。</p>
+    <div class="section-header">
+      <div class="section-title">作例コーパス</div>
+      <span class="section-subtitle">Works Corpus / 2,893</span>
+    </div>
+    <p class="section-description">世界の伝説的書籍・雑誌・レポート2,893件。実在する出版物のみを収録。</p>
     <div class="controls">
       <select id="worksMedium"><option value="">すべての媒体</option></select>
       <input type="text" id="worksSearch" placeholder="タイトル・デザイナー・出版社で検索...">
@@ -327,8 +442,11 @@ footer a { color: var(--accent); text-decoration: none; }
 
 <section id="fonts">
   <div class="container">
-    <h2>フォント</h2>
-    <p>和文・欧文書体764件。書体ペアリング推奨50組も別途収録。</p>
+    <div class="section-header">
+      <div class="section-title">フォント</div>
+      <span class="section-subtitle">Fonts / 764</span>
+    </div>
+    <p class="section-description">和文・欧文書体764件。書体ペアリング推奨50組も別途収録。</p>
     <div class="controls">
       <select id="fontScript"><option value="">和文＋欧文</option></select>
       <select id="fontClass"><option value="">すべての分類</option></select>
@@ -342,8 +460,11 @@ footer a { color: var(--accent); text-decoration: none; }
 
 <section id="designers">
   <div class="container">
-    <h2>デザイナー・アートディレクター</h2>
-    <p>書籍デザイン・エディトリアルデザイン・タイポグラフィの巨匠243名。日本・海外の代表的人物を網羅。</p>
+    <div class="section-header">
+      <div class="section-title">デザイナー・アートディレクター</div>
+      <span class="section-subtitle">Designers / 243</span>
+    </div>
+    <p class="section-description">書籍デザイン・エディトリアルデザイン・タイポグラフィの巨匠243名。</p>
     <div class="controls">
       <select id="designerRole"><option value="">すべての役割</option></select>
       <select id="designerCountry"><option value="">すべての国</option></select>
@@ -357,8 +478,11 @@ footer a { color: var(--accent); text-decoration: none; }
 
 <section id="theory">
   <div class="container">
-    <h2>タイポグラフィ理論</h2>
-    <p>和文タイポグラフィ・欧文マイクロタイポグラフィ・マクロタイポ・認知知覚・デジタル組版・歴史運動の446項目。</p>
+    <div class="section-header">
+      <div class="section-title">タイポグラフィ理論</div>
+      <span class="section-subtitle">Theory Concepts / 446</span>
+    </div>
+    <p class="section-description">和文・欧文・マクロ・認知知覚・デジタル組版・歴史運動の446項目。</p>
     <div class="controls">
       <select id="theoryCategory"><option value="">すべてのカテゴリ</option></select>
       <input type="text" id="theorySearch" placeholder="概念名で検索...">
@@ -371,8 +495,11 @@ footer a { color: var(--accent); text-decoration: none; }
 
 <section id="copy">
   <div class="container">
-    <h2>コピー・タイトル技法</h2>
-    <p>書籍タイトル・帯コピー・雑誌見出し・リード・キャプション・タグライン技法1,127件。</p>
+    <div class="section-header">
+      <div class="section-title">コピー・タイトル技法</div>
+      <span class="section-subtitle">Copy Techniques / 1,127</span>
+    </div>
+    <p class="section-description">書籍タイトル・帯コピー・雑誌見出し・リード・キャプション・タグライン技法。</p>
     <div class="controls">
       <select id="copyCategory"><option value="">すべてのカテゴリ</option></select>
       <input type="text" id="copySearch" placeholder="技法名で検索...">
@@ -385,12 +512,11 @@ footer a { color: var(--accent); text-decoration: none; }
 
 <footer>
   <div class="container">
-    <p>Editorial Design Knowledge DB · 6,195 records · 構築: 2026年5月</p>
-    <p>NPO法人ミラツク 西村勇也 編 ／ Source: <a href="https://github.com/yuyanishimura0312/editorial-design-db" target="_blank">GitHub</a></p>
+    <p>Editorial Design Knowledge DB · 6,195 records · 2026年5月公開</p>
+    <p>NPO法人ミラツク 西村勇也 編 ／ <a href="https://github.com/yuyanishimura0312/editorial-design-db" target="_blank">GitHub Source</a></p>
   </div>
 </footer>
 
-<script src="data.js"></script>
 <script src="app.js"></script>
 </body>
 </html>
