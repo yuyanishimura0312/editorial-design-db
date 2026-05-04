@@ -1,0 +1,21 @@
+id,category,name,name_ja,era,numeric_params_json
+01,canon,Van de Graaf Canon,ファン・デ・グラーフ・カノン,1950s-recon,{"page_ratio": 1.5, "margin_ratio": [1,1,1.5,2], "division": 9}
+02,canon,Rosarivo Canon,ローザリーヴォ・カノン,1947,{"golden_ratio": 1.618, "margin_ratio": [2,3,4,6], "page_ratio": 1.5}
+03,canon,Tschichold Canon,ツァイヒホルト・カノン,1970s,{"margin_ratio": [1,1,2,3], "page_ratio": 1.5}
+04,canon,Villard de Honnecourt Scheme,ヴィラール・ド・オヌクール図式,1230,{"divisions": [3,4,5,6]}
+05,margin,Morris Law,モリスの法則,1890s,{"margin_ratio": [1, 1.2, 1.44, 1.73]}
+06,papersize,A4 (ISO 216),A4判,1975-,{"width_mm": 210, "height_mm": 297, "ratio": 1.414}
+07,papersize,B5 (JIS),B5判（JIS）,1975-,{"width_mm": 182, "height_mm": 257, "ratio": 1.412}
+08,papersize,Shinsho,新書判,1950s-,{"width_mm": 105, "height_mm": 173, "ratio": 1.648}
+09,papersize,Bunko,文庫判,1950s-,{"width_mm": 105, "height_mm": 148, "ratio": 1.410}
+10,papersize,Shirokunban,四六判,1900s-,{"width_mm": 128, "height_mm": 188, "ratio": 1.469}
+11,papersize,Kiku,菊判,1900s-,{"width_mm": 150, "height_mm": 220, "ratio": 1.467}
+12,papersize,AB-size,AB判,1970s-,{"width_mm": 210, "height_mm": 257, "ratio": 1.224}
+13,typearea,Type Area Ratio Range,版面率,classic,{"min_ratio": 0.4, "max_ratio": 0.7}
+14,margin,Inner Margin,内側余白（のど）,classic,{"ratio_in_classical": 1.0}
+15,baseline,Baseline Grid Definition,基線グリッド定義,2000s-,{"based_on": "leading", "snap_enabled": true}
+16,measure,Measure (Line Length),メジャー（行長）,typography,{"optimal_cpl_en": 66, "optimal_cpl_ja": 38}
+17,ja_typography,字詰め,字詰め,ja-classic,{"units": "character_count", "typical_range": [20, 40]}
+18,ja_typography,行間,行間（Leading）,typography,{"standard": 1.0, "readable": 1.2}
+19,multicolumn,Two-Column Layout,2段組,ja-modern,{"chars_per_line": 24, "gap_chars": 1.25}
+20,modular_scale,Golden Ratio,黄金比,classic-modern,{"ratio": 1.618}

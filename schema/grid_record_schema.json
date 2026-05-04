@@ -1,0 +1,80 @@
+{
+  "record_id": "edgrid_NNN",
+  "design_name": "Design Name (English)",
+  "design_name_ja": "デザイン名（日本語）",
+  "era": "classic|modern|contemporary|experimental",
+  "source_reference": [
+    "Reference1",
+    "Reference2"
+  ],
+  "page_size": {
+    "width_mm": 152,
+    "height_mm": 228,
+    "ratio": 1.5,
+    "standard_name": "A5 Variant"
+  },
+  "margins": {
+    "inner_mm": 16.9,
+    "top_mm": 25.3,
+    "outer_mm": 25.3,
+    "bottom_mm": 33.8,
+    "ratio_scheme": [
+      1,
+      1.5,
+      1.5,
+      2
+    ],
+    "description": "Margin configuration [inner, top, outer, bottom]"
+  },
+  "type_area": {
+    "width_mm": 109.8,
+    "height_mm": 169.2,
+    "ratio_to_page": 0.54,
+    "mathematical_property": "height_equals_page_width_numeric_close"
+  },
+  "typography": {
+    "body_font_size_pt": 11,
+    "leading_pt": 13,
+    "measure_chars": 38,
+    "line_height_ratio": 1.18
+  },
+  "columns": {
+    "count": 1,
+    "width_mm": 109.8,
+    "gutter_mm": 0
+  },
+  "baseline_grid": {
+    "increment_pt": 13,
+    "based_on_leading": true,
+    "lines_per_page": 13
+  },
+  "hierarchy": {
+    "heading_scale_ratio": 1.5,
+    "heading_size_pt": 16.5,
+    "heading_leading_pt": 19.5
+  },
+  "language": "ja|en|cjk|ar",
+  "application_domain": [
+    "book",
+    "magazine",
+    "newspaper",
+    "web",
+    "packaging"
+  ],
+  "mathematical_basis": [
+    "golden_ratio",
+    "nine_division_canon"
+  ],
+  "properties": {
+    "traditional_aesthetic": true,
+    "modular": true,
+    "accessible": true,
+    "responsive": false
+  },
+  "notes": "Description of the design and use cases",
+  "see_also": [
+    "edgrid_002",
+    "edgrid_015"
+  ],
+  "created_date": "2026-05-04"
+}

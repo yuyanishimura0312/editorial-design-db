@@ -1,0 +1,30 @@
+{"name":"A4","name_ja":"A4判","width_mm":210,"height_mm":297,"region":"international","typical_use":"office documents, magazines","typical_use_ja":"オフィス文書・雑誌","historical_origin":"DIN 476 (1922)"}
+{"name":"A5","name_ja":"A5判","width_mm":148,"height_mm":210,"region":"international","typical_use":"books, notebooks","typical_use_ja":"書籍・ノート","historical_origin":"DIN 476"}
+{"name":"A3","name_ja":"A3判","width_mm":297,"height_mm":420,"region":"international","typical_use":"posters, large reports","typical_use_ja":"ポスター・大判レポート","historical_origin":"DIN 476"}
+{"name":"B5 (JIS)","name_ja":"B5判","width_mm":182,"height_mm":257,"region":"japan","typical_use":"textbooks, magazines","typical_use_ja":"教科書・雑誌","historical_origin":"JIS B-series"}
+{"name":"B6 (JIS)","name_ja":"B6判","width_mm":128,"height_mm":182,"region":"japan","typical_use":"hardcover books","typical_use_ja":"単行本","historical_origin":"JIS B-series"}
+{"name":"Shiroku-ban","name_ja":"四六判","width_mm":128,"height_mm":188,"region":"japan","typical_use":"trade books, novels","typical_use_ja":"単行本・小説","historical_origin":"Edo period paper standard"}
+{"name":"Shinsho-ban","name_ja":"新書判","width_mm":105,"height_mm":173,"region":"japan","typical_use":"new-book series, popular nonfiction","typical_use_ja":"新書","historical_origin":"Iwanami Shinsho 1938"}
+{"name":"Bunko-ban","name_ja":"文庫判","width_mm":105,"height_mm":148,"region":"japan","typical_use":"pocket paperbacks","typical_use_ja":"文庫本","historical_origin":"Iwanami Bunko 1927"}
+{"name":"Kiku-ban","name_ja":"菊判","width_mm":150,"height_mm":220,"region":"japan","typical_use":"magazines, art books","typical_use_ja":"雑誌・美術書","historical_origin":"Meiji-era newspaper standard"}
+{"name":"AB-ban","name_ja":"AB判","width_mm":210,"height_mm":257,"region":"japan","typical_use":"women's magazines","typical_use_ja":"女性誌","historical_origin":"hybrid A4 width × B5 height"}
+{"name":"US Letter","name_ja":"USレター","width_mm":215.9,"height_mm":279.4,"region":"north_america","typical_use":"office documents","typical_use_ja":"米国オフィス標準","historical_origin":"ANSI A"}
+{"name":"US Legal","name_ja":"USリーガル","width_mm":215.9,"height_mm":355.6,"region":"north_america","typical_use":"legal documents","typical_use_ja":"法務文書","historical_origin":"US legal standard"}
+{"name":"Tabloid","name_ja":"タブロイド","width_mm":279.4,"height_mm":431.8,"region":"international","typical_use":"newspapers (small format)","typical_use_ja":"新聞（小型）","historical_origin":"early 20th c. tabloid newspapers"}
+{"name":"Broadsheet","name_ja":"ブロードシート","width_mm":597,"height_mm":749,"region":"international","typical_use":"large newspapers","typical_use_ja":"全国紙","historical_origin":"18th c. British newspapers"}
+{"name":"Berliner","name_ja":"ベルリーナー","width_mm":315,"height_mm":470,"region":"europe","typical_use":"European newspapers","typical_use_ja":"欧州新聞","historical_origin":"Berlin newspapers"}
+{"name":"Royal Octavo","name_ja":"ロイヤル・オクタボ","width_mm":156,"height_mm":234,"region":"uk_us","typical_use":"trade hardcover","typical_use_ja":"英米トレード書","historical_origin":"19th c. publishing"}
+{"name":"Crown Quarto","name_ja":"クラウン・クォート","width_mm":189,"height_mm":246,"region":"uk","typical_use":"academic books","typical_use_ja":"学術書","historical_origin":"British paper sizes"}
+{"name":"Demy Octavo","name_ja":"デミー・オクタボ","width_mm":138,"height_mm":216,"region":"uk_us","typical_use":"novels, trade","typical_use_ja":"小説","historical_origin":"British standard"}
+{"name":"Pinched Crown","name_ja":"ピンチ・クラウン","width_mm":129,"height_mm":198,"region":"uk","typical_use":"paperbacks","typical_use_ja":"ペーパーバック","historical_origin":"British paperback"}
+{"name":"Square","name_ja":"スクエア判","width_mm":210,"height_mm":210,"region":"international","typical_use":"art books, design monographs","typical_use_ja":"美術書・デザイン本","historical_origin":"modernist movement"}
+{"name":"Royal","name_ja":"ロイヤル","width_mm":234,"height_mm":312,"region":"uk","typical_use":"large format books","typical_use_ja":"大型書籍","historical_origin":"British paper standard"}
+{"name":"Quarto","name_ja":"クォート","width_mm":215,"height_mm":275,"region":"international","typical_use":"art catalogs","typical_use_ja":"美術図録","historical_origin":"folio fold quarter"}
+{"name":"Folio","name_ja":"フォリオ","width_mm":305,"height_mm":480,"region":"international","typical_use":"oversize books, atlases","typical_use_ja":"大型本・地図帳","historical_origin":"Renaissance printing"}
+{"name":"DL","name_ja":"DLサイズ","width_mm":99,"height_mm":210,"region":"international","typical_use":"brochures, leaflets","typical_use_ja":"パンフレット","historical_origin":"DIN narrow"}
+{"name":"Postcard JP","name_ja":"はがき","width_mm":100,"height_mm":148,"region":"japan","typical_use":"postcards","typical_use_ja":"はがき","historical_origin":"Japan Post standard"}
+{"name":"Compact Magazine","name_ja":"コンパクト雑誌","width_mm":155,"height_mm":230,"region":"international","typical_use":"weekly magazines","typical_use_ja":"週刊誌","historical_origin":"Time/Newsweek format"}
+{"name":"Square Zine","name_ja":"スクエアZINE","width_mm":140,"height_mm":140,"region":"international","typical_use":"art zines","typical_use_ja":"アートZINE","historical_origin":"DIY culture"}
+{"name":"A4 Landscape","name_ja":"A4横","width_mm":297,"height_mm":210,"region":"international","typical_use":"presentations, reports","typical_use_ja":"プレゼン・レポート","historical_origin":"DIN landscape"}
+{"name":"Mini Square","name_ja":"ミニ・スクエア","width_mm":120,"height_mm":120,"region":"international","typical_use":"art books, photo zines","typical_use_ja":"アート本","historical_origin":"contemporary art books"}
+{"name":"Concertina","name_ja":"蛇腹","width_mm":150,"height_mm":210,"region":"international","typical_use":"folded brochures, accordion books","typical_use_ja":"折本・アコーディオン","historical_origin":"East Asian sutra binding"}

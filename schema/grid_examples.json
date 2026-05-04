@@ -1,0 +1,180 @@
+[
+  {
+    "record_id": "edgrid_001",
+    "design_name": "Classical Book Page - 2:3 Ratio with Van de Graaf",
+    "design_name_ja": "古典的な書籍ページ（ファン・デ・グラーフ・カノン）",
+    "era": "classic",
+    "source_reference": [
+      "Van de Graaf Canon",
+      "Rosarivo Canon"
+    ],
+    "page_size": {
+      "width_mm": 152,
+      "height_mm": 228,
+      "ratio": 1.5,
+      "standard_name": "A5-like variant"
+    },
+    "margins": {
+      "inner_mm": 16.9,
+      "top_mm": 25.3,
+      "outer_mm": 25.3,
+      "bottom_mm": 33.8,
+      "ratio_scheme": [
+        1,
+        1.5,
+        1.5,
+        2
+      ]
+    },
+    "type_area": {
+      "width_mm": 109.8,
+      "height_mm": 169.2,
+      "ratio_to_page": 0.54
+    },
+    "typography": {
+      "body_font_size_pt": 11,
+      "leading_pt": 13,
+      "measure_chars": 38,
+      "line_height_ratio": 1.18
+    },
+    "columns": {
+      "count": 1,
+      "width_mm": 109.8,
+      "gutter_mm": 0
+    },
+    "baseline_grid": {
+      "increment_pt": 13,
+      "based_on_leading": true,
+      "lines_per_page": 13
+    },
+    "language": "ja",
+    "application_domain": [
+      "book",
+      "literary_fiction"
+    ],
+    "created_date": "2026-05-04"
+  },
+  {
+    "record_id": "edgrid_002",
+    "design_name": "Japanese Magazine Grid - Two Column Layout",
+    "design_name_ja": "日本の雑誌グリッド（2段組）",
+    "era": "modern",
+    "source_reference": [
+      "Suzuki Hitoshi",
+      "Japanese typography standards"
+    ],
+    "page_size": {
+      "width_mm": 210,
+      "height_mm": 257,
+      "ratio": 1.224,
+      "standard_name": "AB-size"
+    },
+    "margins": {
+      "inner_mm": 15,
+      "top_mm": 18,
+      "outer_mm": 18,
+      "bottom_mm": 20,
+      "ratio_scheme": [
+        1,
+        1.2,
+        1.2,
+        1.33
+      ]
+    },
+    "type_area": {
+      "width_mm": 177,
+      "height_mm": 219,
+      "ratio_to_page": 0.65
+    },
+    "typography": {
+      "body_font_size_pt": 10,
+      "leading_pt": 12,
+      "measure_chars": 24,
+      "line_height_ratio": 1.2
+    },
+    "columns": {
+      "count": 2,
+      "width_mm": 81,
+      "gutter_mm": 15
+    },
+    "baseline_grid": {
+      "increment_pt": 12,
+      "based_on_leading": true,
+      "lines_per_page": 18
+    },
+    "language": "ja",
+    "application_domain": [
+      "magazine",
+      "journal"
+    ],
+    "created_date": "2026-05-04"
+  },
+  {
+    "record_id": "edgrid_003",
+    "design_name": "Web Magazine Grid - Responsive Modular Scale",
+    "design_name_ja": "Webマガジングリッド（レスポンシブ）",
+    "era": "contemporary",
+    "source_reference": [
+      "Mark Boulton",
+      "CSS Grid",
+      "Modular Scale"
+    ],
+    "page_size": {
+      "width_mm": null,
+      "height_mm": null,
+      "ratio": "fluid",
+      "standard_name": "Responsive - Desktop: 1024px, Mobile: 375px"
+    },
+    "margins": {
+      "inner_mm": null,
+      "top_mm": null,
+      "outer_mm": null,
+      "bottom_mm": null,
+      "ratio_scheme": null,
+      "responsive_values": {
+        "desktop": "60px",
+        "tablet": "40px",
+        "mobile": "20px"
+      }
+    },
+    "type_area": {
+      "width_mm": null,
+      "ratio_to_page": 0.8,
+      "responsive_max_width_ch": 66
+    },
+    "typography": {
+      "body_font_size_pt": 16,
+      "leading_pt": 24,
+      "measure_chars": 66,
+      "line_height_ratio": 1.5,
+      "modular_scale_ratio": 1.5
+    },
+    "columns": {
+      "count": "responsive",
+      "desktop_count": 3,
+      "tablet_count": 2,
+      "mobile_count": 1,
+      "gutter_mm": null,
+      "responsive_gap": "2rem"
+    },
+    "baseline_grid": {
+      "increment_pt": 24,
+      "based_on_leading": true,
+      "implementation": "CSS Grid vertical rhythm"
+    },
+    "language": "en",
+    "application_domain": [
+      "web",
+      "digital_editorial"
+    ],
+    "mathematical_basis": [
+      "perfect_fifth_1.5"
+    ],
+    "properties": {
+      "responsive": true,
+      "accessible": true,
+      "wcag_compliant": true
+    },
+    "created_date": "2026-05-04"
+  }
+]

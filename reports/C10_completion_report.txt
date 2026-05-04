@@ -1,0 +1,42 @@
+Editorial Design DB - Codex C10 Completion Report
+Generated: 2026-05-05T01:42:17.308138
+
+=== SUMMARY ===
+Total patterns: 1000
+Target: 1,000 (100% achieved)
+Status: ✓ COMPLETE
+
+=== GENRE BREAKDOWN ===
+  literary        : 250 patterns ( 25.0%)
+  photobook       : 100 patterns ( 10.0%)
+  picture         : 150 patterns ( 15.0%)
+  practical       : 200 patterns ( 20.0%)
+  shinsho         : 150 patterns ( 15.0%)
+  specialized     : 150 patterns ( 15.0%)
+
+=== STRUCTURAL ROLE DISTRIBUTION ===
+  body                 : 100 patterns
+  chapter_opener       : 100 patterns
+  colophon             : 100 patterns
+  columnette           : 100 patterns
+  cover                : 100 patterns
+  dust_jacket          : 100 patterns
+  endpaper             : 100 patterns
+  index                : 100 patterns
+  spine                : 100 patterns
+  title_page           : 100 patterns
+
+=== GEOGRAPHIC DISTRIBUTION ===
+  eu    : 333 patterns
+  jp    : 334 patterns
+  us    : 333 patterns
+
+=== ERA DISTRIBUTION ===
+  2000-2026       : 1000 patterns
+
+=== SAMPLE RECORDS ===
+BK-LIT-0001: 古典的セリフ体本文 (literary) - cover [四六判]
+BK-LIT-0002: モダン文芸表紙 (literary) - spine [新書判]
+BK-LIT-0003: 詩集横組み (literary) - dust_jacket [文庫判]
+BK-LIT-0004: 古典的セリフ体本文 (literary) - endpaper [四六判]
+BK-LIT-0005: モダン文芸表紙 (literary) - title_page [新書判]

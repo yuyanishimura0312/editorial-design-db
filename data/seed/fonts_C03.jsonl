@@ -1,0 +1,147 @@
+{"id": 1, "name": "Garamond", "script_type": "latin", "foundry": "Multiple", "release_year": 1500, "classification": "Old Style", "sub_classification": "Garamond"}
+{"id": 2, "name": "Adobe Garamond", "script_type": "latin", "foundry": "Adobe", "release_year": 1989, "classification": "Old Style", "sub_classification": "Garamond"}
+{"id": 3, "name": "Stempel Garamond", "script_type": "latin", "foundry": "Stempel", "release_year": 1924, "classification": "Old Style", "sub_classification": "Garamond"}
+{"id": 4, "name": "Garamond 3", "script_type": "latin", "foundry": "Linotype", "release_year": 1936, "classification": "Old Style", "sub_classification": "Garamond"}
+{"id": 5, "name": "EB Garamond", "script_type": "latin", "foundry": "Open source", "release_year": 2010, "classification": "Old Style", "sub_classification": "Garamond"}
+{"id": 6, "name": "Crimson Text", "script_type": "latin", "foundry": "Google Fonts", "release_year": 2010, "classification": "Old Style", "sub_classification": "Garamond-inspired"}
+{"id": 7, "name": "Cormorant Garamond", "script_type": "latin", "foundry": "Google Fonts", "release_year": 2015, "classification": "Display Serif", "sub_classification": "Display"}
+{"id": 8, "name": "Garamond Premier Pro", "script_type": "latin", "foundry": "Adobe", "release_year": 2005, "classification": "Old Style", "sub_classification": "Professional"}
+{"id": 9, "name": "Granjon", "script_type": "latin", "foundry": "Linotype", "release_year": 1927, "classification": "Old Style", "sub_classification": "Garamond-related"}
+{"id": 10, "name": "Linden Hill", "script_type": "latin", "foundry": "Google Fonts", "release_year": 2010, "classification": "Old Style", "sub_classification": "Web"}
+{"id": 11, "name": "IM Fell English", "script_type": "latin", "foundry": "Google Fonts", "release_year": 2009, "classification": "Old Style", "sub_classification": "18th century"}
+{"id": 12, "name": "IM Fell English Pro", "script_type": "latin", "foundry": "Google Fonts", "release_year": 2010, "classification": "Old Style", "sub_classification": "Professional"}
+{"id": 13, "name": "Caslon", "script_type": "latin", "foundry": "Multiple", "release_year": 1734, "classification": "Old Style", "sub_classification": "Caslon"}
+{"id": 14, "name": "Big Caslon", "script_type": "latin", "foundry": "Font Bureau", "release_year": 1994, "classification": "Old Style", "sub_classification": "Display"}
+{"id": 15, "name": "Adobe Caslon", "script_type": "latin", "foundry": "Adobe", "release_year": 1990, "classification": "Old Style", "sub_classification": "Professional"}
+{"id": 16, "name": "Libre Caslon", "script_type": "latin", "foundry": "Google Fonts", "release_year": 2020, "classification": "Old Style", "sub_classification": "Web"}
+{"id": 17, "name": "Caslon Antique", "script_type": "latin", "foundry": "Caslon", "release_year": 1895, "classification": "Display Serif", "sub_classification": "Vintage"}
+{"id": 18, "name": "Bembo", "script_type": "latin", "foundry": "Monotype", "release_year": 1929, "classification": "Old Style", "sub_classification": "Renaissance"}
+{"id": 19, "name": "Centaur", "script_type": "latin", "foundry": "Monotype", "release_year": 1914, "classification": "Old Style", "sub_classification": "Renaissance"}
+{"id": 20, "name": "Poliphilus", "script_type": "latin", "foundry": "Monotype", "release_year": 1923, "classification": "Old Style", "sub_classification": "Renaissance"}
+{"id": 21, "name": "Jenson", "script_type": "latin", "foundry": "Linotype", "release_year": 1985, "classification": "Old Style", "sub_classification": "Renaissance revival"}
+{"id": 22, "name": "Sabon", "script_type": "latin", "foundry": "Linotype", "release_year": 1966, "classification": "Old Style", "sub_classification": "DTP standard"}
+{"id": 23, "name": "Sabon Next", "script_type": "latin", "foundry": "Linotype", "release_year": 2002, "classification": "Old Style", "sub_classification": "Modern"}
+{"id": 24, "name": "Baskerville", "script_type": "latin", "foundry": "Multiple", "release_year": 1750, "classification": "Transitional", "sub_classification": "Baskerville"}
+{"id": 25, "name": "Baskerville Linotype", "script_type": "latin", "foundry": "Linotype", "release_year": 1920, "classification": "Transitional", "sub_classification": "Metal type"}
+{"id": 26, "name": "BaskervilleMT", "script_type": "latin", "foundry": "Monotype", "release_year": 1960, "classification": "Transitional", "sub_classification": "Digital"}
+{"id": 27, "name": "Bodoni", "script_type": "latin", "foundry": "Multiple", "release_year": 1790, "classification": "Modern Serif", "sub_classification": "Bodoni"}
+{"id": 28, "name": "Bodoni MT", "script_type": "latin", "foundry": "Monotype", "release_year": 1960, "classification": "Modern Serif", "sub_classification": "Monotype"}
+{"id": 29, "name": "ITC Bodoni", "script_type": "latin", "foundry": "ITC", "release_year": 1994, "classification": "Modern Serif", "sub_classification": "Contemporary"}
+{"id": 30, "name": "Bodoni Moda", "script_type": "latin", "foundry": "Google Fonts", "release_year": 2019, "classification": "Modern Serif", "sub_classification": "Web"}
+{"id": 31, "name": "Didot", "script_type": "latin", "foundry": "Multiple", "release_year": 1800, "classification": "Modern Serif", "sub_classification": "Didot"}
+{"id": 32, "name": "Linotype Didot", "script_type": "latin", "foundry": "Linotype", "release_year": 1992, "classification": "Modern Serif", "sub_classification": "Professional"}
+{"id": 33, "name": "Didot (Hoefler)", "script_type": "latin", "foundry": "Hoefler & Co", "release_year": 2015, "classification": "Modern Serif", "sub_classification": "Contemporary"}
+{"id": 34, "name": "Times", "script_type": "latin", "foundry": "Monotype", "release_year": 1932, "classification": "Modern Serif", "sub_classification": "Times"}
+{"id": 35, "name": "Times New Roman", "script_type": "latin", "foundry": "Monotype", "release_year": 1932, "classification": "Modern Serif", "sub_classification": "Web standard"}
+{"id": 36, "name": "Noto Serif", "script_type": "latin", "foundry": "Google", "release_year": 2014, "classification": "Modern Serif", "sub_classification": "Multilingual"}
+{"id": 37, "name": "Merriweather", "script_type": "latin", "foundry": "Sorkin Type", "release_year": 2011, "classification": "Modern Serif", "sub_classification": "Web"}
+{"id": 38, "name": "TeX Gyre Termes", "script_type": "latin", "foundry": "GUST", "release_year": 2006, "classification": "Modern Serif", "sub_classification": "LaTeX"}
+{"id": 39, "name": "Tinos", "script_type": "latin", "foundry": "Google Fonts", "release_year": 2010, "classification": "Modern Serif", "sub_classification": "Web"}
+{"id": 40, "name": "Minion", "script_type": "latin", "foundry": "Adobe", "release_year": 1990, "classification": "Modern Serif", "sub_classification": "Adobe"}
+{"id": 41, "name": "Minion Pro", "script_type": "latin", "foundry": "Adobe", "release_year": 2000, "classification": "Modern Serif", "sub_classification": "OpenType"}
+{"id": 42, "name": "Minion Web", "script_type": "latin", "foundry": "Adobe", "release_year": 2010, "classification": "Modern Serif", "sub_classification": "Web"}
+{"id": 43, "name": "Lora", "script_type": "latin", "foundry": "Google Fonts", "release_year": 2011, "classification": "Modern Serif", "sub_classification": "Web"}
+{"id": 44, "name": "PT Serif", "script_type": "latin", "foundry": "Paratype", "release_year": 2006, "classification": "Modern Serif", "sub_classification": "Cyrillic-Latin"}
+{"id": 45, "name": "Charter", "script_type": "latin", "foundry": "Bitstream", "release_year": 1987, "classification": "Modern Serif", "sub_classification": "Screen-optimized"}
+{"id": 46, "name": "Lexicon", "script_type": "latin", "foundry": "FontFont", "release_year": 1992, "classification": "Modern Serif", "sub_classification": "Dutch"}
+{"id": 47, "name": "Cambria", "script_type": "latin", "foundry": "Microsoft", "release_year": 2004, "classification": "Modern Serif", "sub_classification": "ClearType"}
+{"id": 48, "name": "Book Antiqua", "script_type": "latin", "foundry": "Monotype", "release_year": 1992, "classification": "Modern Serif", "sub_classification": "Office"}
+{"id": 49, "name": "Liberation Serif", "script_type": "latin", "foundry": "Red Hat", "release_year": 2007, "classification": "Modern Serif", "sub_classification": "Open source"}
+{"id": 50, "name": "Droid Serif", "script_type": "latin", "foundry": "Google", "release_year": 2008, "classification": "Modern Serif", "sub_classification": "Android"}
+{"id": 51, "name": "Source Serif Pro", "script_type": "latin", "foundry": "Adobe", "release_year": 2014, "classification": "Modern Serif", "sub_classification": "Open source"}
+{"id": 52, "name": "Spectral", "script_type": "latin", "foundry": "Production Type", "release_year": 2014, "classification": "Modern Serif", "sub_classification": "Editorial"}
+{"id": 53, "name": "Cormorant", "script_type": "latin", "foundry": "Google Fonts", "release_year": 2015, "classification": "Display Serif", "sub_classification": "Elegant"}
+{"id": 54, "name": "Clarendon", "script_type": "latin", "foundry": "Berthold", "release_year": 1845, "classification": "Slab Serif", "sub_classification": "Victorian"}
+{"id": 55, "name": "Rockwell", "script_type": "latin", "foundry": "Monotype", "release_year": 1934, "classification": "Slab Serif", "sub_classification": "Geometric"}
+{"id": 56, "name": "Freight Text", "script_type": "latin", "foundry": "Darden Studio", "release_year": 2009, "classification": "Slab Serif", "sub_classification": "Contemporary"}
+{"id": 57, "name": "Georgia", "script_type": "latin", "foundry": "Microsoft", "release_year": 1996, "classification": "Slab Serif", "sub_classification": "Screen"}
+{"id": 58, "name": "Bitter", "script_type": "latin", "foundry": "Huerta", "release_year": 2011, "classification": "Slab Serif", "sub_classification": "Web"}
+{"id": 59, "name": "Courier New", "script_type": "latin", "foundry": "Monotype", "release_year": 1950, "classification": "Monospace", "sub_classification": "Typewriter"}
+{"id": 60, "name": "Roboto Slab", "script_type": "latin", "foundry": "Google Fonts", "release_year": 2013, "classification": "Slab Serif", "sub_classification": "Geometric"}
+{"id": 61, "name": "Aleo", "script_type": "latin", "foundry": "Latinotype", "release_year": 2013, "classification": "Slab Serif", "sub_classification": "Geometric"}
+{"id": 62, "name": "Rufina", "script_type": "latin", "foundry": "Google Fonts", "release_year": 2012, "classification": "Slab Serif", "sub_classification": "Display"}
+{"id": 63, "name": "Glegoo", "script_type": "latin", "foundry": "Google Fonts", "release_year": 2014, "classification": "Slab Serif", "sub_classification": "Display"}
+{"id": 64, "name": "Coustard", "script_type": "latin", "foundry": "Google Fonts", "release_year": 2012, "classification": "Slab Serif", "sub_classification": "Display"}
+{"id": 65, "name": "Podkova", "script_type": "latin", "foundry": "Google Fonts", "release_year": 2012, "classification": "Slab Serif", "sub_classification": "Display"}
+{"id": 66, "name": "Inknut Antiqua", "script_type": "latin", "foundry": "Google Fonts", "release_year": 2016, "classification": "Slab Serif", "sub_classification": "Display"}
+{"id": 67, "name": "Zilla Slab", "script_type": "latin", "foundry": "Mozilla", "release_year": 2017, "classification": "Slab Serif", "sub_classification": "Geometric"}
+{"id": 68, "name": "Trajan", "script_type": "latin", "foundry": "Adobe", "release_year": 1989, "classification": "Display Serif", "sub_classification": "Classical"}
+{"id": 69, "name": "Stempel Schneidler", "script_type": "latin", "foundry": "Stempel", "release_year": 1910, "classification": "Display Serif", "sub_classification": "Art Nouveau"}
+{"id": 70, "name": "Zapfino", "script_type": "latin", "foundry": "Linotype", "release_year": 1998, "classification": "Display Serif", "sub_classification": "Calligraphic"}
+{"id": 71, "name": "Hoefler Text", "script_type": "latin", "foundry": "Hoefler & Co", "release_year": 1991, "classification": "Display Serif", "sub_classification": "Calligraphic"}
+{"id": 72, "name": "Perpetua", "script_type": "latin", "foundry": "Monotype", "release_year": 1928, "classification": "Transitional Serif", "sub_classification": "Gill"}
+{"id": 73, "name": "Gill Serif", "script_type": "latin", "foundry": "Monotype", "release_year": 2009, "classification": "Transitional Serif", "sub_classification": "Gill"}
+{"id": 74, "name": "Optima", "script_type": "latin", "foundry": "Linotype", "release_year": 1958, "classification": "Transitional Serif", "sub_classification": "Hybrid"}
+{"id": 75, "name": "Regent", "script_type": "latin", "foundry": "Monotype", "release_year": 1925, "classification": "Old Style", "sub_classification": "Classic"}
+{"id": 76, "name": "Cloister", "script_type": "latin", "foundry": "Foundry", "release_year": 1894, "classification": "Old Style", "sub_classification": "Medieval"}
+{"id": 77, "name": "Italian Old Style", "script_type": "latin", "foundry": "ATF", "release_year": 1901, "classification": "Old Style", "sub_classification": "American"}
+{"id": 78, "name": "Scotch Roman", "script_type": "latin", "foundry": "Miller & Richard", "release_year": 1859, "classification": "Transitional", "sub_classification": "Victorian"}
+{"id": 79, "name": "Bookman", "script_type": "latin", "foundry": "ATF", "release_year": 1901, "classification": "Old Style", "sub_classification": "American"}
+{"id": 80, "name": "Caxton", "script_type": "latin", "foundry": "Rogers", "release_year": 1904, "classification": "Old Style", "sub_classification": "Medieval"}
+{"id": 81, "name": "Fournier", "script_type": "latin", "foundry": "Multiple", "release_year": 1742, "classification": "Transitional", "sub_classification": "18th century"}
+{"id": 82, "name": "Monotype Fournier", "script_type": "latin", "foundry": "Monotype", "release_year": 1924, "classification": "Transitional", "sub_classification": "18th century"}
+{"id": 83, "name": "Cardo", "script_type": "latin", "foundry": "Google Fonts", "release_year": 2007, "classification": "Old Style", "sub_classification": "Classical"}
+{"id": 84, "name": "Philosopher", "script_type": "latin", "foundry": "Google Fonts", "release_year": 2012, "classification": "Old Style", "sub_classification": "Contemporary"}
+{"id": 85, "name": "Petrona", "script_type": "latin", "foundry": "Google Fonts", "release_year": 2012, "classification": "Old Style", "sub_classification": "Balanced"}
+{"id": 86, "name": "Quentin", "script_type": "latin", "foundry": "Google Fonts", "release_year": 2011, "classification": "Old Style", "sub_classification": "Elegant"}
+{"id": 87, "name": "Mate", "script_type": "latin", "foundry": "Google Fonts", "release_year": 2011, "classification": "Old Style", "sub_classification": "Contemporary"}
+{"id": 88, "name": "Fanwood Text", "script_type": "latin", "foundry": "Google Fonts", "release_year": 2010, "classification": "Old Style", "sub_classification": "Book"}
+{"id": 89, "name": "Istok Web", "script_type": "latin", "foundry": "Google Fonts", "release_year": 2011, "classification": "Modern Serif", "sub_classification": "Web"}
+{"id": 90, "name": "Jaf Lapture", "script_type": "latin", "foundry": "Huerta", "release_year": 2010, "classification": "Modern Serif", "sub_classification": "Spanish"}
+{"id": 91, "name": "Domine", "script_type": "latin", "foundry": "Google Fonts", "release_year": 2012, "classification": "Modern Serif", "sub_classification": "Contemporary"}
+{"id": 92, "name": "Esteban", "script_type": "latin", "foundry": "Google Fonts", "release_year": 2014, "classification": "Old Style", "sub_classification": "Elegant"}
+{"id": 93, "name": "Frank Ruhl Libre", "script_type": "latin", "foundry": "Google Fonts", "release_year": 2017, "classification": "Old Style", "sub_classification": "Hebrew-Latin"}
+{"id": 94, "name": "IBM Plex Serif", "script_type": "latin", "foundry": "IBM", "release_year": 2017, "classification": "Modern Serif", "sub_classification": "Corporate"}
+{"id": 95, "name": "Alegreya", "script_type": "latin", "foundry": "Google Fonts", "release_year": 2011, "classification": "Modern Serif", "sub_classification": "Editorial"}
+{"id": 96, "name": "Alegreya SC", "script_type": "latin", "foundry": "Google Fonts", "release_year": 2011, "classification": "Modern Serif", "sub_classification": "Small Caps"}
+{"id": 97, "name": "Crimson Pro", "script_type": "latin", "foundry": "Google Fonts", "release_year": 2019, "classification": "Old Style", "sub_classification": "Professional"}
+{"id": 98, "name": "Vollkorn", "script_type": "latin", "foundry": "Google Fonts", "release_year": 2009, "classification": "Old Style", "sub_classification": "Book"}
+{"id": 99, "name": "Buenard", "script_type": "latin", "foundry": "Google Fonts", "release_year": 2012, "classification": "Old Style", "sub_classification": "Elegant"}
+{"id": 100, "name": "Lyon", "script_type": "latin", "foundry": "Kai Bernau", "release_year": 2014, "classification": "Modern Serif", "sub_classification": "Editorial"}
+{"id": 101, "name": "Freight Big", "script_type": "latin", "foundry": "Darden Studio", "release_year": 2009, "classification": "Display Serif", "sub_classification": "Headline"}
+{"id": 102, "name": "Mackinac", "script_type": "latin", "foundry": "Font Bureau", "release_year": 2000, "classification": "Modern Serif", "sub_classification": "Professional"}
+{"id": 103, "name": "Miller", "script_type": "latin", "foundry": "Matthew Carter", "release_year": 1997, "classification": "Modern Serif", "sub_classification": "Editorial"}
+{"id": 104, "name": "Castor", "script_type": "latin", "foundry": "Jürgen Siebert", "release_year": 2008, "classification": "Modern Serif", "sub_classification": "Contemporary"}
+{"id": 105, "name": "Justus", "script_type": "latin", "foundry": "Richard Lipton", "release_year": 2009, "classification": "Modern Serif", "sub_classification": "Contemporary"}
+{"id": 106, "name": "Meno", "script_type": "latin", "foundry": "David Berlow", "release_year": 1997, "classification": "Modern Serif", "sub_classification": "Professional"}
+{"id": 107, "name": "Morist", "script_type": "latin", "foundry": "Łukasz Dziedzic", "release_year": 2013, "classification": "Old Style", "sub_classification": "Contemporary"}
+{"id": 108, "name": "Arnhem", "script_type": "latin", "foundry": "Fred Smeijers", "release_year": 2002, "classification": "Modern Serif", "sub_classification": "Editorial"}
+{"id": 109, "name": "Fedra Serif", "script_type": "latin", "foundry": "Peter Bil'ak", "release_year": 2001, "classification": "Modern Serif", "sub_classification": "Screen"}
+{"id": 110, "name": "Maiola", "script_type": "latin", "foundry": "Veronika Burian", "release_year": 2009, "classification": "Modern Serif", "sub_classification": "Editorial"}
+{"id": 111, "name": "Tiempos Headline", "script_type": "latin", "foundry": "Klim Type Foundry", "release_year": 2017, "classification": "Display Serif", "sub_classification": "Editorial"}
+{"id": 112, "name": "Tiempos Text", "script_type": "latin", "foundry": "Klim Type Foundry", "release_year": 2017, "classification": "Modern Serif", "sub_classification": "Editorial"}
+{"id": 113, "name": "Freight Display", "script_type": "latin", "foundry": "Darden Studio", "release_year": 2009, "classification": "Display Serif", "sub_classification": "Headline"}
+{"id": 114, "name": "Söhne", "script_type": "latin", "foundry": "Kris Sowersby", "release_year": 2016, "classification": "Modern Serif", "sub_classification": "Contemporary"}
+{"id": 115, "name": "Lyon Text", "script_type": "latin", "foundry": "Kai Bernau", "release_year": 2014, "classification": "Modern Serif", "sub_classification": "Book"}
+{"id": 116, "name": "Palenight", "script_type": "latin", "foundry": "Alegreya Design", "release_year": 2015, "classification": "Modern Serif", "sub_classification": "Editorial"}
+{"id": 117, "name": "Parisine", "script_type": "latin", "foundry": "Jean François Porchez", "release_year": 1998, "classification": "Modern Serif", "sub_classification": "Editorial"}
+{"id": 118, "name": "Questa", "script_type": "latin", "foundry": "Quenottes", "release_year": 2009, "classification": "Modern Serif", "sub_classification": "Book"}
+{"id": 119, "name": "Saga", "script_type": "latin", "foundry": "Multiple", "release_year": 1980, "classification": "Modern Serif", "sub_classification": "Professional"}
+{"id": 120, "name": "Chronicle Text", "script_type": "latin", "foundry": "Hoefler & Co", "release_year": 2002, "classification": "Modern Serif", "sub_classification": "Editorial"}
+{"id": 121, "name": "Chronicle Display", "script_type": "latin", "foundry": "Hoefler & Co", "release_year": 2002, "classification": "Display Serif", "sub_classification": "Editorial"}
+{"id": 122, "name": "Whitney", "script_type": "latin", "foundry": "Tobias Frere-Jones", "release_year": 2004, "classification": "Modern Serif", "sub_classification": "Corporate"}
+{"id": 123, "name": "Maison Neue", "script_type": "latin", "foundry": "Atom", "release_year": 2015, "classification": "Modern Serif", "sub_classification": "Contemporary"}
+{"id": 124, "name": "Typetura", "script_type": "latin", "foundry": "Multiple", "release_year": 2012, "classification": "Display Serif", "sub_classification": "Digital"}
+{"id": 125, "name": "Relative Mono", "script_type": "latin", "foundry": "Maroš Matušiak", "release_year": 2013, "classification": "Monospace", "sub_classification": "Code"}
+{"id": 126, "name": "Pragati", "script_type": "latin", "foundry": "Google Fonts", "release_year": 2014, "classification": "Modern Serif", "sub_classification": "Multilingual"}
+{"id": 127, "name": "Yrsa", "script_type": "latin", "foundry": "Multiple", "release_year": 2014, "classification": "Old Style", "sub_classification": "Multilingual"}
+{"id": 128, "name": "Mate SC", "script_type": "latin", "foundry": "Google Fonts", "release_year": 2011, "classification": "Old Style", "sub_classification": "Small Caps"}
+{"id": 129, "name": "Glegoo Black", "script_type": "latin", "foundry": "Google Fonts", "release_year": 2014, "classification": "Slab Serif", "sub_classification": "Display"}
+{"id": 130, "name": "Cutive", "script_type": "latin", "foundry": "Verve", "release_year": 2011, "classification": "Old Style", "sub_classification": "Elegant"}
+{"id": 131, "name": "Playfair Display", "script_type": "latin", "foundry": "Claus Eggers Sørensen", "release_year": 2014, "classification": "Display Serif", "sub_classification": "Display"}
+{"id": 132, "name": "Rufina Regular", "script_type": "latin", "foundry": "Google Fonts", "release_year": 2012, "classification": "Slab Serif", "sub_classification": "Display"}
+{"id": 133, "name": "Adelle Sans", "script_type": "latin", "foundry": "TypeTogether", "release_year": 2008, "classification": "Modern Serif", "sub_classification": "Contemporary"}
+{"id": 134, "name": "Adelle", "script_type": "latin", "foundry": "TypeTogether", "release_year": 2007, "classification": "Modern Serif", "sub_classification": "Contemporary"}
+{"id": 135, "name": "Freight Pro", "script_type": "latin", "foundry": "Darden Studio", "release_year": 2009, "classification": "Modern Serif", "sub_classification": "Professional"}
+{"id": 136, "name": "Freight Text Pro", "script_type": "latin", "foundry": "Darden Studio", "release_year": 2009, "classification": "Modern Serif", "sub_classification": "Text"}
+{"id": 137, "name": "Freight Sans", "script_type": "latin", "foundry": "Darden Studio", "release_year": 2009, "classification": "Modern Serif", "sub_classification": "Sans"}
+{"id": 138, "name": "Gadaleta", "script_type": "latin", "foundry": "TypeTogether", "release_year": 2010, "classification": "Modern Serif", "sub_classification": "Contemporary"}
+{"id": 139, "name": "Harriet", "script_type": "latin", "foundry": "Commercial Type", "release_year": 2017, "classification": "Display Serif", "sub_classification": "Display"}
+{"id": 140, "name": "Hagin", "script_type": "latin", "foundry": "Commercial Type", "release_year": 2018, "classification": "Modern Serif", "sub_classification": "Contemporary"}
+{"id": 141, "name": "Hybrid", "script_type": "latin", "foundry": "Multiple", "release_year": 2005, "classification": "Modern Serif", "sub_classification": "Experimental"}
+{"id": 142, "name": "Ivar Display", "script_type": "latin", "foundry": "TypeTogether", "release_year": 2019, "classification": "Display Serif", "sub_classification": "Display"}
+{"id": 143, "name": "Ivar Text", "script_type": "latin", "foundry": "TypeTogether", "release_year": 2019, "classification": "Modern Serif", "sub_classification": "Text"}
+{"id": 144, "name": "Jaf Lapture Pro", "script_type": "latin", "foundry": "Huerta", "release_year": 2010, "classification": "Modern Serif", "sub_classification": "Professional"}
+{"id": 145, "name": "Jubilat", "script_type": "latin", "foundry": "The Foundry", "release_year": 2007, "classification": "Display Serif", "sub_classification": "Display"}
+{"id": 146, "name": "Kepler", "script_type": "latin", "foundry": "Type Network", "release_year": 2019, "classification": "Modern Serif", "sub_classification": "Contemporary"}
+{"id": 147, "name": "Lyon Display", "script_type": "latin", "foundry": "Kai Bernau", "release_year": 2014, "classification": "Display Serif", "sub_classification": "Display"}
