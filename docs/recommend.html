@@ -362,17 +362,10 @@ footer a:hover { border-bottom-color: var(--accent-warm); }
         </div>
       </div>
 
-      <div>
-        <label for="apikey">Anthropic APIキー</label>
-        <input type="password" id="apikey" placeholder="sk-ant-..." autocomplete="off">
-        <p class="hint">入力されたキーはこのブラウザ（localStorage）にのみ保存され、外部送信は<a href="https://api.anthropic.com" target="_blank">api.anthropic.com</a>への直接呼び出しのみです。<br>キーを取得する: <a href="https://console.anthropic.com/settings/keys" target="_blank">Anthropic Console</a></p>
-      </div>
-
       <div class="actions">
         <button id="run-btn" class="btn">解析して推奨</button>
-        <button id="save-key-btn" class="btn btn-secondary">APIキーをこのブラウザに保存</button>
-        <button id="clear-key-btn" class="btn btn-secondary">保存したキーを削除</button>
       </div>
+      <p class="hint">APIキーはサーバー側（Vercel環境変数）で管理されます。ユーザー入力は不要です。</p>
 
       <div id="status" class="status"></div>
     </div>

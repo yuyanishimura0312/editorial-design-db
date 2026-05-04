@@ -1,0 +1,9 @@
+data/
+research/
+schema/
+scripts/
+reports/
+.git/
+*.db
+*.csv
+__pycache__/

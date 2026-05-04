@@ -1,8 +1,7 @@
-// EDD recommend app — vanilla JS
-// Flow: load data → user input → call Claude API → score & rank patterns → render with SVG samples
+// EDD recommend app — calls server-side proxy /api/analyze
+// API key is managed server-side via Vercel env var.
 
-const STORAGE_KEY = "edd_anthropic_key";
-const MODEL = "claude-opus-4-7";
+const API_ENDPOINT = "/api/analyze";
 const TOP_N = 20;
 
 const els = {
@@ -10,10 +9,7 @@ const els = {
   mediumHint: document.getElementById("medium-hint"),
   langHint: document.getElementById("lang-hint"),
   regionHint: document.getElementById("region-hint"),
-  apikey: document.getElementById("apikey"),
   runBtn: document.getElementById("run-btn"),
-  saveKeyBtn: document.getElementById("save-key-btn"),
-  clearKeyBtn: document.getElementById("clear-key-btn"),
   status: document.getElementById("status"),
   analysisSummary: document.getElementById("analysis-summary"),
   analysisText: document.getElementById("analysis-text"),
@@ -25,19 +21,6 @@ const els = {
 let DATA = null;
 
 async function init() {
-  const savedKey = localStorage.getItem(STORAGE_KEY);
-  if (savedKey) els.apikey.value = savedKey;
-
-  els.saveKeyBtn.addEventListener("click", () => {
-    if (!els.apikey.value.trim()) return setStatus("APIキーが空です", "error");
-    localStorage.setItem(STORAGE_KEY, els.apikey.value.trim());
-    setStatus("APIキーをこのブラウザに保存しました");
-  });
-  els.clearKeyBtn.addEventListener("click", () => {
-    localStorage.removeItem(STORAGE_KEY);
-    els.apikey.value = "";
-    setStatus("保存されていたAPIキーを削除しました");
-  });
   els.runBtn.addEventListener("click", run);
 
   setStatus("データを読み込み中...");
@@ -58,18 +41,16 @@ function setStatus(msg, type = "info") {
 async function run() {
   const brief = els.brief.value.trim();
   if (!brief) return setStatus("作りたいものの概要を入力してください", "error");
-  const apiKey = els.apikey.value.trim();
-  if (!apiKey) return setStatus("Anthropic APIキーを入力してください", "error");
   if (!DATA) return setStatus("データがまだ読み込まれていません", "error");
 
   els.runBtn.disabled = true;
-  setStatus("Claude APIで入力を解析中...");
+  setStatus("AIで入力を解析中（数秒かかります）...");
 
   let analysis;
   try {
-    analysis = await analyzeWithClaude(brief, apiKey);
+    analysis = await analyzeViaProxy(brief);
   } catch (e) {
-    setStatus("API呼び出しエラー: " + e.message, "error");
+    setStatus("解析エラー: " + e.message, "error");
     els.runBtn.disabled = false;
     return;
   }
@@ -85,60 +66,30 @@ async function run() {
   els.runBtn.disabled = false;
 }
 
-async function analyzeWithClaude(brief, apiKey) {
-  const mediumHint = els.mediumHint.value;
-  const langHint = els.langHint.value;
-  const regionHint = els.regionHint.value;
+async function analyzeViaProxy(brief) {
+  const hints = {
+    medium: els.mediumHint.value || null,
+    lang: els.langHint.value || null,
+    region: els.regionHint.value || null,
+  };
 
-  const prompt = `あなたはEditorial Design Knowledge DBの推奨エンジンです。ユーザーの入力を解析し、紙面デザインパターンを選ぶための検索条件をJSONで返してください。
-
-# ユーザー入力
-${brief}
-
-# ヒント（指定がある場合のみ尊重）
-- 媒体: ${mediumHint || "指定なし"}
-- 言語: ${langHint || "指定なし"}
-- 地域: ${regionHint || "指定なし"}
-
-# 出力フォーマット（厳密にJSONのみ、コードブロック禁止）
-{
-  "summary_ja": "ユーザーの意図を80字程度で要約",
-  "medium": "book|magazine|newspaper|report|catalog|zine|pamphlet|null",
-  "sub_medium_candidates": ["literary","fashion","lifestyle","culture","business","academic","practical","picture",...から該当を最大3つ"],
-  "era_target": "pre-1900|1900-1945|1945-1980|1980-2000|2000-2026|null",
-  "region_target": "Japan|USA|Europe|UK|null",
-  "tone_keywords": ["記述から推察される雰囲気・トーンのキーワード5-8個（例: ミニマル, 古典的, 情緒的, 高級, 親しみやすい）"],
-  "design_priorities": ["white_space","photo_dominance","typography_focused","grid_strict","experimental","modular","narrative","minimal","ornate"の中から該当する3-5つ"],
-  "search_keywords": ["DBで検索すべき具体的なキーワード（人名・誌名・書体名・出版社名など、5-12個）"],
-  "rationale_ja": "選定方針を80字程度で説明"
-}
-
-各値は文字列または配列。null可能な箇所はnull。コードブロック・説明文不要、JSONのみ返す。`;
-
-  const res = await fetch("https://api.anthropic.com/v1/messages", {
+  const res = await fetch(API_ENDPOINT, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "x-api-key": apiKey,
-      "anthropic-version": "2023-06-01",
-      "anthropic-dangerous-direct-browser-access": "true",
-    },
-    body: JSON.stringify({
-      model: MODEL,
-      max_tokens: 1024,
-      messages: [{ role: "user", content: prompt }],
-    }),
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ brief, hints }),
   });
 
   if (!res.ok) {
-    const err = await res.text();
-    throw new Error(`HTTP ${res.status}: ${err.slice(0, 200)}`);
+    let detail = "";
+    try {
+      const errBody = await res.json();
+      detail = errBody.error || JSON.stringify(errBody);
+    } catch {
+      detail = await res.text();
+    }
+    throw new Error(`HTTP ${res.status}: ${detail.slice(0, 200)}`);
   }
-  const data = await res.json();
-  const text = data.content?.[0]?.text || "";
-  const jsonMatch = text.match(/\{[\s\S]*\}/);
-  if (!jsonMatch) throw new Error("AI応答にJSONが含まれていません: " + text.slice(0, 200));
-  return JSON.parse(jsonMatch[0]);
+  return await res.json();
 }
 
 function scorePatterns(patterns, analysis) {
@@ -165,7 +116,6 @@ function scorePatterns(patterns, analysis) {
     tone.forEach(t => { if (t && blob.includes(t)) score += 0.5; });
     priorities.forEach(pr => { if (pr && blob.includes(pr.replace("_", " "))) score += 0.5; });
 
-    // small description bonus to prefer detailed records
     const descLen = (p.description_ja || "").length;
     score += Math.min(1, descLen / 200);
 
@@ -255,7 +205,6 @@ function renderSample(coord) {
   const gutter = coord.gutter_mm || coord.gutter || 5;
   const baseline = coord.baseline_grid_pt || coord.baseline_grid || 14;
 
-  // Scale to fit a 200x280 maximum (preserve aspect)
   const maxW = 200;
   const maxH = 260;
   let scale = maxW / w;
@@ -266,16 +215,13 @@ function renderSample(coord) {
   const totalW = sw + padding * 2;
   const totalH = sh + padding * 2;
 
-  // Page rect
   const pageRect = `<rect x="${padding}" y="${padding}" width="${sw}" height="${sh}" fill="var(--card)" stroke="var(--text-secondary)" stroke-width="0.5"/>`;
 
-  // Type area
   const tx = padding + inner * scale;
   const ty = padding + top * scale;
   const tw = (w - inner - outer) * scale;
   const th = (h - top - bottom) * scale;
 
-  // Column dividers
   let colLines = "";
   if (cols > 1 && tw > 0) {
     const colW = (tw - gutter * scale * (cols - 1)) / cols;
@@ -285,12 +231,10 @@ function renderSample(coord) {
     }
   }
 
-  // Type area outline
   const typeAreaRect = `<rect x="${tx}" y="${ty}" width="${tw}" height="${th}" fill="none" stroke="var(--accent-warm)" stroke-width="0.5" opacity="0.6"/>`;
 
-  // Body lines (simulating baseline grid)
   let bodyLines = "";
-  const lineSpacing = (baseline / 2.83) * scale; // pt to mm rough (1pt=0.353mm)
+  const lineSpacing = (baseline / 2.83) * scale;
   if (lineSpacing > 0.5) {
     const lineCount = Math.floor(th / lineSpacing);
     const colW = cols > 1 ? (tw - gutter * scale * (cols - 1)) / cols : tw;
