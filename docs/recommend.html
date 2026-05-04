@@ -277,6 +277,183 @@ textarea:focus, input:focus, select:focus {
 }
 .spec-row span strong { color: var(--text-secondary); font-weight: 500; }
 
+.use-btn {
+  font-family: var(--font);
+  font-size: 0.78rem;
+  padding: 6px 12px;
+  border: 1px solid var(--accent-warm);
+  background: var(--bg);
+  color: var(--accent-warm);
+  cursor: pointer;
+  border-radius: var(--radius);
+  letter-spacing: 0.02em;
+  transition: all 0.15s;
+  margin-top: auto;
+}
+.use-btn:hover { background: var(--accent-warm); color: #FFFFFF; }
+
+/* Compose modal */
+.compose-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  display: none;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 32px 16px;
+  overflow-y: auto;
+  z-index: 200;
+}
+.compose-overlay.show { display: flex; }
+.compose-panel {
+  background: var(--bg);
+  width: 100%;
+  max-width: 1080px;
+  border: 1px solid var(--border);
+  padding: 32px;
+}
+.compose-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 1px solid var(--border-light);
+  padding-bottom: 16px;
+  margin-bottom: 24px;
+  gap: 16px;
+}
+.compose-head h2 {
+  font-family: var(--font-serif);
+  font-size: 1.2rem;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  margin-bottom: 4px;
+}
+.compose-head .meta-line {
+  font-size: 0.74rem;
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
+  line-height: 1.7;
+}
+.compose-close {
+  font-family: var(--font);
+  font-size: 0.86rem;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  padding: 6px 12px;
+  cursor: pointer;
+  border-radius: var(--radius);
+}
+.compose-close:hover { border-color: var(--accent-warm); color: var(--accent-warm); }
+
+.compose-body {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 24px;
+}
+@media (max-width: 800px) { .compose-body { grid-template-columns: 1fr; } }
+
+.compose-controls label {
+  display: block;
+  font-size: 0.74rem;
+  color: var(--text-secondary);
+  margin: 12px 0 4px;
+  letter-spacing: 0.02em;
+}
+.compose-controls input,
+.compose-controls textarea,
+.compose-controls select {
+  width: 100%;
+  padding: 6px 10px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 0.82rem;
+  border-radius: var(--radius);
+}
+.compose-controls textarea { min-height: 110px; resize: vertical; line-height: 1.7; }
+.compose-controls .ctrl-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+.compose-controls button {
+  font-family: var(--font);
+  font-size: 0.78rem;
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  cursor: pointer;
+  border-radius: var(--radius);
+}
+.compose-controls button:hover { border-color: var(--accent-warm); color: var(--accent-warm); }
+.compose-controls button.primary {
+  background: var(--accent-warm);
+  color: #FFFFFF;
+  border-color: var(--accent-warm);
+}
+.compose-controls button.primary:hover { opacity: 0.85; color: #FFFFFF; }
+
+.compose-stage {
+  background: var(--surface);
+  padding: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  overflow: auto;
+  min-height: 400px;
+}
+
+.spec-block {
+  font-size: 0.74rem;
+  color: var(--text-muted);
+  line-height: 1.8;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--border-light);
+}
+.spec-block strong { color: var(--text-secondary); font-weight: 500; }
+
+/* Page preview — uses real mm scale */
+.page-preview {
+  background: #FFFFFF;
+  color: #121212;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.12);
+  position: relative;
+  font-feature-settings: "palt", "pkna";
+  letter-spacing: 0.01em;
+  /* CSS variables set inline by JS */
+}
+.page-preview h1.pp-title {
+  font-family: inherit;
+  margin: 0;
+  line-height: 1.4;
+}
+.page-preview .pp-lead {
+  margin-top: 0.6em;
+  line-height: 1.7;
+  color: #444;
+}
+.page-preview .pp-body {
+  line-height: var(--leading-ratio, 1.7);
+}
+.page-preview .pp-body p {
+  text-indent: 1em;
+  margin: 0;
+}
+.page-preview .pp-body p + p { margin-top: 0.4em; }
+.page-preview .pp-folio {
+  position: absolute;
+  font-size: 0.7em;
+  color: #888;
+  letter-spacing: 0.1em;
+}
+.page-preview.vertical { writing-mode: vertical-rl; text-orientation: mixed; }
+.page-preview.vertical .pp-body p { text-indent: 1em; }
+
 footer {
   padding: 40px 0 60px;
   font-size: 0.78rem;
@@ -396,6 +573,47 @@ footer a:hover { border-bottom-color: var(--accent-warm); }
     <p>NPO法人ミラツク 西村勇也 編 ／ <a href="https://github.com/yuyanishimura0312/editorial-design-db" target="_blank">GitHub Source</a></p>
   </div>
 </footer>
+
+<div id="compose-overlay" class="compose-overlay" role="dialog" aria-modal="true">
+  <div class="compose-panel">
+    <div class="compose-head">
+      <div>
+        <h2 id="compose-title">組版サンプル</h2>
+        <div id="compose-meta" class="meta-line"></div>
+      </div>
+      <button id="compose-close" class="compose-close">閉じる</button>
+    </div>
+    <div class="compose-body">
+      <div class="compose-controls">
+        <label for="cc-title">タイトル</label>
+        <input type="text" id="cc-title">
+        <label for="cc-subtitle">サブタイトル / 著者</label>
+        <input type="text" id="cc-subtitle">
+        <label for="cc-lead">リード</label>
+        <textarea id="cc-lead" rows="3"></textarea>
+        <label for="cc-body">本文</label>
+        <textarea id="cc-body" rows="10"></textarea>
+        <label for="cc-orient">組み方向</label>
+        <select id="cc-orient">
+          <option value="horizontal">横組み</option>
+          <option value="vertical">縦組み</option>
+        </select>
+        <label for="cc-bgmode">背景モード</label>
+        <select id="cc-bgmode">
+          <option value="paper">紙面（白地）</option>
+          <option value="dark">紙面（黒地）</option>
+        </select>
+        <div class="ctrl-actions">
+          <button id="cc-update" class="primary">反映</button>
+          <button id="cc-print">印刷／PDF</button>
+          <button id="cc-download">HTMLを保存</button>
+        </div>
+        <div class="spec-block" id="cc-spec"></div>
+      </div>
+      <div class="compose-stage" id="compose-stage"></div>
+    </div>
+  </div>
+</div>
 
 <script src="recommend.js"></script>
 </body>
