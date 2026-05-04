@@ -397,6 +397,11 @@ textarea:focus, input:focus, select:focus {
 }
 .compose-controls button.primary:hover { opacity: 0.85; color: #FFFFFF; }
 
+.compose-stage-wrap {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
 .compose-stage {
   background: var(--surface);
   padding: 24px;
@@ -406,15 +411,19 @@ textarea:focus, input:focus, select:focus {
   align-items: center;
   overflow: auto;
   min-height: 400px;
-  max-height: 80vh;
+  max-height: 75vh;
+  width: 100%;
 }
 .compose-stage.list-view {
   align-items: stretch;
+  padding: 16px;
 }
-.compose-stage.list-view .page-wrap {
-  display: inline-flex;
+.page-wrap {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
-.page-wrap { position: relative; }
 .page-label {
   font-family: var(--font);
   font-size: 0.7rem;
@@ -430,62 +439,96 @@ textarea:focus, input:focus, select:focus {
 
 .list-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
   gap: 16px;
   width: 100%;
 }
-.list-grid .thumb-card {
+.thumb-card {
   background: var(--card);
   border: 1px solid var(--border-light);
   padding: 12px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
 }
-.list-grid .thumb-img {
+.thumb-canvas {
   background: var(--surface);
-  aspect-ratio: 0.7;
   position: relative;
   overflow: hidden;
+  width: 100%;
 }
-.list-grid .thumb-img > div {
-  transform-origin: top left;
+.thumb-canvas .page-preview {
   position: absolute;
-  top: 0; left: 0;
+  top: 0;
+  left: 0;
+  transform-origin: top left;
 }
-.list-grid .thumb-label {
-  font-size: 0.74rem;
+.thumb-canvas .spread-pair {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform-origin: top left;
+}
+.thumb-meta {
+  font-size: 0.66rem;
+  color: var(--text-muted);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.thumb-label {
+  font-size: 0.78rem;
   font-weight: 500;
   color: var(--text);
-  letter-spacing: 0.02em;
-}
-.list-grid .thumb-meta {
-  font-size: 0.68rem;
-  color: var(--text-muted);
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  line-height: 1.4;
 }
 
 .view-toggle {
   display: flex;
   gap: 4px;
   margin-bottom: 8px;
+  align-self: flex-start;
 }
 .view-toggle button {
   font-family: var(--font);
   font-size: 0.74rem;
-  padding: 4px 12px;
+  padding: 6px 14px;
   border: 1px solid var(--border);
   background: var(--bg);
   color: var(--text);
   cursor: pointer;
   border-radius: var(--radius);
   letter-spacing: 0.02em;
+  transition: all 0.15s;
 }
+.view-toggle button:hover { border-color: var(--accent-warm); color: var(--accent-warm); }
 .view-toggle button.active {
   background: var(--text);
   color: var(--bg);
   border-color: var(--text);
+}
+.view-toggle button.active:hover { color: var(--bg); border-color: var(--text); }
+
+@media print {
+  body * { visibility: hidden; }
+  .compose-stage, .compose-stage * { visibility: visible; }
+  .compose-overlay {
+    position: static;
+    background: none;
+    padding: 0;
+    overflow: visible;
+  }
+  .compose-overlay .compose-panel { padding: 0; border: 0; box-shadow: none; }
+  .compose-overlay .compose-head, .compose-overlay .compose-controls, .view-toggle { display: none !important; }
+  .compose-stage {
+    background: none;
+    padding: 0;
+    max-height: none !important;
+    overflow: visible;
+    align-items: flex-start;
+  }
+  .page-preview { box-shadow: none !important; page-break-after: always; }
+  .page-label, .thumb-meta, .thumb-label { display: none; }
 }
 
 .flow-block {
@@ -735,7 +778,7 @@ footer a:hover { border-bottom-color: var(--accent-warm); }
 
         <div class="spec-block" id="cc-spec"></div>
       </div>
-      <div style="display: flex; flex-direction: column;">
+      <div class="compose-stage-wrap">
         <div class="view-toggle">
           <button id="vt-detail" class="active" data-view="detail">ページ詳細</button>
           <button id="vt-list" data-view="list">一覧（サムネイル）</button>

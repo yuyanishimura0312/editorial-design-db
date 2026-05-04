@@ -661,15 +661,29 @@ function renderComposePage() {
   }).join("");
 
   if (CURRENT_VIEW === "list") {
-    // Wrap each page in thumbnail card
     els.composeStage.classList.add("list-view");
-    const thumbnails = sequence.map((step, idx) => {
-      const stepCtx = step.chapterIndex != null ? { ...ctx, _chapterIndex: step.chapterIndex } : ctx;
-      const pageHtml = renderPageByRole(step.role, step.label, idx + 1, sequence.length, stepCtx);
-      // Extract just the inner page-preview (strip outer page-wrap label)
-      return makeThumbnailCard(step.label, idx + 1, sequence.length, pageHtml, ctx);
+    // Re-render every page at thumbnail scale and wrap in thumb-card
+    const thumbW = 144; // canvas width target (px)
+    const thumbScale = thumbW / pageWpx;
+    const thumbCtx = { ...ctx, scale: thumbScale };
+    const thumbs = sequence.map((step, idx) => {
+      const stepCtx = step.chapterIndex != null ? { ...thumbCtx, _chapterIndex: step.chapterIndex } : thumbCtx;
+      // role renderer wraps the page in pageWrap (label+page-preview). For thumbnail we do not want
+      // the outer label/wrap, so we extract only the inner content via direct call to the renderer
+      // but with a small wrapper.
+      const inner = renderPageInnerOnly(step.role, idx + 1, sequence.length, stepCtx);
+      const isSpread = step.role === "feature_spread" || step.role === "feature_page";
+      const canvasW = isSpread ? pageWpx * 2 * thumbScale : pageWpx * thumbScale;
+      const canvasH = pageHpx * thumbScale;
+      return `
+        <div class="thumb-card">
+          <div class="thumb-canvas" style="height: ${canvasH}px;">${inner}</div>
+          <div class="thumb-meta">${idx + 1} / ${sequence.length}</div>
+          <div class="thumb-label">${escapeHtml(step.label)}</div>
+        </div>
+      `;
     }).join("");
-    els.composeStage.innerHTML = `<div class="list-grid">${thumbnails}</div>`;
+    els.composeStage.innerHTML = `<div class="list-grid">${thumbs}</div>`;
   } else {
     els.composeStage.classList.remove("list-view");
     els.composeStage.innerHTML = pagesHtml;
@@ -732,22 +746,17 @@ function expandSequenceWithChapters(baseSeq, chapters, medium) {
   return out;
 }
 
-function makeThumbnailCard(label, idx, total, pageHtml, ctx) {
-  // Extract the inner element with its scale, then re-scale to thumbnail size
-  const thumbW = 180;
-  const thumbScale = thumbW / ctx.pageWpx;
-  // Re-render the page at smaller scale
-  const reHtml = pageHtml
-    .replace(/transform: scale\(([0-9.]+)\)/g, `transform: scale(${thumbScale})`);
-  // Strip outer .page-wrap and .page-label, keep only inner content
-  const inner = reHtml.replace(/<div class="page-wrap"><div class="page-label">[^<]*<\/div>/, '<div class="page-wrap-inner">').replace(/<\/div>$/, "");
-  return `
-    <div class="thumb-card">
-      <div class="thumb-img" style="height: ${ctx.pageHpx * thumbScale}px;">${inner}</div>
-      <div class="thumb-meta">${idx} / ${total}</div>
-      <div class="thumb-label">${escapeHtml(label)}</div>
-    </div>
-  `;
+// Get just the inner page HTML (strip outer page-wrap+label) for thumbnail use
+function renderPageInnerOnly(role, idx, total, ctx) {
+  const fullHtml = renderPageByRole(role, "_label_", idx, total, ctx);
+  // Robust extraction: find the first child div under page-wrap and return everything except the page-wrap chrome
+  const startIdx = fullHtml.indexOf('</div>'); // closes <div class="page-label">_label_</div>
+  if (startIdx === -1) return fullHtml;
+  const afterLabel = fullHtml.slice(startIdx + 6); // skip </div>
+  // afterLabel should start with the inner wrapper and end with </div> (the page-wrap close)
+  const lastClose = afterLabel.lastIndexOf('</div>');
+  if (lastClose === -1) return afterLabel;
+  return afterLabel.slice(0, lastClose);
 }
 
 function pageStyleStr(ctx, opts = {}) {
