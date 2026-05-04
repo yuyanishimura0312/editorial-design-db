@@ -12,13 +12,13 @@
 | design_patterns | 363 | 10000 | 3.6% |
 | copy_techniques | 1127 | 1000 | 112.7% |
 | copywriters | 40 | 40 | 100.0% |
-| theory_concepts | 231 | 380 | 60.8% |
+| theory_concepts | 446 | 380 | 117.4% |
 | theorists | 55 | — | — |
 | grid_systems | 40 | 100 | 40.0% |
 | layout_canons | 30 | — | — |
 | works_corpus | 2893 | 5000 | 57.9% |
 | trim_sizes | 30 | — | — |
-| **TOTAL** | **5980** | | |
+| **TOTAL** | **6195** | | |
 
 ## JSON Field Validity
 - `design_patterns.coordinate_json`: 363/363 valid JSON
