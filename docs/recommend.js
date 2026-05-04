@@ -32,11 +32,20 @@ const els = {
   ccPrint: document.getElementById("cc-print"),
   ccDownload: document.getElementById("cc-download"),
   ccSpec: document.getElementById("cc-spec"),
+  // flow + view toggle
+  ccFulltext: document.getElementById("cc-fulltext"),
+  ccFlow: document.getElementById("cc-flow"),
+  ccFlowClear: document.getElementById("cc-flow-clear"),
+  ccFlowStatus: document.getElementById("cc-flow-status"),
+  vtDetail: document.getElementById("vt-detail"),
+  vtList: document.getElementById("vt-list"),
 };
 
 let DATA = null;
 let CURRENT_PATTERN = null;
 let CURRENT_COORD = null;
+let STRUCTURED_CONTENT = null; // AI-structured manuscript output
+let CURRENT_VIEW = "detail"; // "detail" | "list"
 
 async function init() {
   els.runBtn.addEventListener("click", run);
@@ -46,6 +55,16 @@ async function init() {
   els.ccBgmode.addEventListener("change", renderComposePage);
   els.ccPrint.addEventListener("click", () => window.print());
   els.ccDownload.addEventListener("click", downloadComposeHtml);
+  els.ccFlow.addEventListener("click", flowFullText);
+  els.ccFlowClear.addEventListener("click", () => {
+    STRUCTURED_CONTENT = null;
+    els.ccFulltext.value = "";
+    setFlowStatus("流し込みデータをクリアしました");
+    renderComposePage();
+  });
+  els.vtDetail.addEventListener("click", () => switchView("detail"));
+  els.vtList.addEventListener("click", () => switchView("list"));
+
   els.composeOverlay.addEventListener("click", (e) => {
     if (e.target === els.composeOverlay) closeCompose();
   });
@@ -417,6 +436,11 @@ function resolveFontStack(faceName, isVertical) {
 function openCompose(pattern) {
   CURRENT_PATTERN = pattern;
   CURRENT_COORD = parseCoord(pattern.coordinate_json) || {};
+  STRUCTURED_CONTENT = null;
+  CURRENT_VIEW = "detail";
+  updateViewToggle();
+  setFlowStatus("");
+
   els.composeTitle.textContent = pattern.name_ja || pattern.name || "組版サンプル";
   const meta = [pattern.medium, pattern.sub_medium, pattern.era, pattern.region].filter(Boolean).join(" / ");
   const designer = pattern.inspiration_designer ? `／参考デザイナー: ${pattern.inspiration_designer}` : "";
@@ -429,6 +453,7 @@ function openCompose(pattern) {
   els.ccSubtitle.value = sample.subtitle;
   els.ccLead.value = sample.lead;
   els.ccBody.value = sample.body;
+  els.ccFulltext.value = "";
 
   // default orientation: vertical for Japanese literary book
   const isJaLiterary = (pattern.medium === "book") && (pattern.region === "Japan") && /literary|shinsho/i.test(pattern.sub_medium || "");
@@ -438,6 +463,68 @@ function openCompose(pattern) {
   els.composeOverlay.classList.add("show");
   document.body.style.overflow = "hidden";
   renderComposePage();
+}
+
+function setFlowStatus(msg, type = "info") {
+  els.ccFlowStatus.textContent = msg;
+  els.ccFlowStatus.className = "flow-status" + (type === "error" ? " error" : "");
+}
+
+async function flowFullText() {
+  const manuscript = (els.ccFulltext.value || "").trim();
+  if (manuscript.length < 30) {
+    setFlowStatus("原稿は30字以上を貼り付けてください", "error");
+    return;
+  }
+  if (!CURRENT_PATTERN) return;
+
+  els.ccFlow.disabled = true;
+  setFlowStatus("AIで原稿を解析中（10〜30秒）...");
+
+  try {
+    const res = await fetch("/api/structure", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        manuscript,
+        medium: CURRENT_PATTERN.medium,
+        pattern_name: CURRENT_PATTERN.name_ja || CURRENT_PATTERN.name,
+        pattern_description: CURRENT_PATTERN.description_ja || CURRENT_PATTERN.description,
+      }),
+    });
+    if (!res.ok) {
+      let err = "";
+      try { err = (await res.json()).error || ""; } catch { err = await res.text(); }
+      throw new Error(`HTTP ${res.status}: ${err.slice(0, 200)}`);
+    }
+    STRUCTURED_CONTENT = await res.json();
+    const chapterCount = (STRUCTURED_CONTENT.chapters || []).length;
+    const tocCount = (STRUCTURED_CONTENT.toc_items || []).length;
+    setFlowStatus(`解析完了。タイトル「${STRUCTURED_CONTENT.title || "(なし)"}」／章数 ${chapterCount}／目次 ${tocCount}項目`);
+
+    // Sync structured content into the form fields (so user sees AI's title etc.)
+    if (STRUCTURED_CONTENT.title) els.ccTitle.value = STRUCTURED_CONTENT.title;
+    if (STRUCTURED_CONTENT.subtitle) els.ccSubtitle.value = STRUCTURED_CONTENT.subtitle;
+    if (STRUCTURED_CONTENT.foreword) els.ccLead.value = STRUCTURED_CONTENT.foreword.slice(0, 200);
+    if (STRUCTURED_CONTENT.chapters?.[0]?.body) els.ccBody.value = STRUCTURED_CONTENT.chapters[0].body;
+
+    renderComposePage();
+  } catch (e) {
+    setFlowStatus("AI判定エラー: " + e.message, "error");
+  } finally {
+    els.ccFlow.disabled = false;
+  }
+}
+
+function switchView(view) {
+  CURRENT_VIEW = view;
+  updateViewToggle();
+  renderComposePage();
+}
+
+function updateViewToggle() {
+  els.vtDetail.classList.toggle("active", CURRENT_VIEW === "detail");
+  els.vtList.classList.toggle("active", CURRENT_VIEW === "list");
 }
 
 function closeCompose() {
@@ -542,7 +629,13 @@ function renderComposePage() {
 
   // Determine page sequence based on medium
   const medium = (p.medium || "book").toLowerCase();
-  const sequence = PAGE_SEQUENCES[medium] || PAGE_SEQUENCES.book;
+  const baseSequence = PAGE_SEQUENCES[medium] || PAGE_SEQUENCES.book;
+
+  // Build sequence: if structured content present, expand chapters into multiple chapter_opener+body pairs
+  let sequence = baseSequence;
+  if (STRUCTURED_CONTENT && STRUCTURED_CONTENT.chapters && STRUCTURED_CONTENT.chapters.length > 0) {
+    sequence = expandSequenceWithChapters(baseSequence, STRUCTURED_CONTENT.chapters, medium);
+  }
 
   const ctx = {
     titleText: els.ccTitle.value,
@@ -558,19 +651,102 @@ function renderComposePage() {
     inner, top, outer, bottom, w, h,
     medium, subMedium: p.sub_medium,
     pattern: p,
+    structured: STRUCTURED_CONTENT,
   };
 
-  const pagesHtml = sequence.map((step, idx) => renderPageByRole(step.role, step.label, idx + 1, sequence.length, ctx)).join("");
+  const pagesHtml = sequence.map((step, idx) => {
+    // step may include chapterIndex for chapter-specific rendering
+    const stepCtx = step.chapterIndex != null ? { ...ctx, _chapterIndex: step.chapterIndex } : ctx;
+    return renderPageByRole(step.role, step.label, idx + 1, sequence.length, stepCtx);
+  }).join("");
 
-  els.composeStage.innerHTML = pagesHtml;
+  if (CURRENT_VIEW === "list") {
+    // Wrap each page in thumbnail card
+    els.composeStage.classList.add("list-view");
+    const thumbnails = sequence.map((step, idx) => {
+      const stepCtx = step.chapterIndex != null ? { ...ctx, _chapterIndex: step.chapterIndex } : ctx;
+      const pageHtml = renderPageByRole(step.role, step.label, idx + 1, sequence.length, stepCtx);
+      // Extract just the inner page-preview (strip outer page-wrap label)
+      return makeThumbnailCard(step.label, idx + 1, sequence.length, pageHtml, ctx);
+    }).join("");
+    els.composeStage.innerHTML = `<div class="list-grid">${thumbnails}</div>`;
+  } else {
+    els.composeStage.classList.remove("list-view");
+    els.composeStage.innerHTML = pagesHtml;
+  }
 
+  const flowNote = STRUCTURED_CONTENT ? `<br><strong>AI流し込み</strong>: ${(STRUCTURED_CONTENT.chapters || []).length}章 / 目次 ${(STRUCTURED_CONTENT.toc_items || []).length}項目` : "";
   els.ccSpec.innerHTML = `
     <strong>仕様</strong><br>
     判型 ${w}×${h}mm／マージン 内${inner}/上${top}/外${outer}/下${bottom}mm<br>
     ${cols}段組${cols > 1 ? `／ガター ${gutter}mm` : ""}／ベースライン ${baselinePt}pt<br>
     本文 ${sizePt}pt／行送り ${leadingPt}pt（行送り比 ${leadingRatio}）${tracking ? `／字間 ${tracking}em` : ""}${measure ? `／${measure}字詰め` : ""}<br>
     書体 ${escapeHtml(face || "(未指定)")}<br>
-    <strong>構成</strong>: ${sequence.map(s => s.label).join(" → ")}
+    <strong>構成 (${sequence.length}ページ)</strong>: ${sequence.map(s => s.label).join(" → ")}${flowNote}
+  `;
+}
+
+// Expand the base sequence: replace single chapter_opener/body with one pair per AI chapter
+function expandSequenceWithChapters(baseSeq, chapters, medium) {
+  const out = [];
+  let inserted = false;
+  for (const step of baseSeq) {
+    const isChapterPair = step.role === "chapter_opener" || (step.role === "body" && !inserted);
+    const isFeaturePair = step.role === "feature_opener" || step.role === "feature_spread" || step.role === "article" || step.role === "column";
+
+    if (medium === "book" && step.role === "chapter_opener" && !inserted) {
+      // Replace this chapter_opener with N chapter_opener + body pairs
+      chapters.forEach((ch, ci) => {
+        out.push({ role: "chapter_opener", label: `${ch.label || `第${ci + 1}章`}扉`, chapterIndex: ci });
+        out.push({ role: "body", label: `${ch.label || `第${ci + 1}章`}本文`, chapterIndex: ci });
+      });
+      inserted = true;
+    } else if (medium === "book" && step.role === "body" && inserted) {
+      // skip — already inserted body pages above
+      continue;
+    } else if (medium === "magazine" && (step.role === "feature_opener" || step.role === "feature_spread") && !inserted) {
+      chapters.forEach((ch, ci) => {
+        if (ci === 0) out.push({ role: "feature_opener", label: `特集扉: ${ch.title || ch.label || ""}`, chapterIndex: ci });
+        out.push({ role: "feature_spread", label: `${ch.label || `記事${ci + 1}`}（見開き）`, chapterIndex: ci });
+      });
+      inserted = true;
+    } else if (medium === "magazine" && (step.role === "article" || step.role === "column") && inserted) {
+      continue;
+    } else if (medium === "report" && step.role === "body" && !inserted) {
+      chapters.forEach((ch, ci) => {
+        out.push({ role: "body", label: `${ch.label || `セクション${ci + 1}`}`, chapterIndex: ci });
+      });
+      inserted = true;
+    } else if (medium === "catalog" && step.role === "work_image" && !inserted) {
+      chapters.forEach((ch, ci) => {
+        out.push({ role: "work_image", label: `${ch.title || `作品${ci + 1}`}（画像）`, chapterIndex: ci });
+        out.push({ role: "work_text", label: `${ch.title || `作品${ci + 1}`}（解説）`, chapterIndex: ci });
+      });
+      inserted = true;
+    } else if (medium === "catalog" && step.role === "work_text" && inserted) {
+      continue;
+    } else {
+      out.push(step);
+    }
+  }
+  return out;
+}
+
+function makeThumbnailCard(label, idx, total, pageHtml, ctx) {
+  // Extract the inner element with its scale, then re-scale to thumbnail size
+  const thumbW = 180;
+  const thumbScale = thumbW / ctx.pageWpx;
+  // Re-render the page at smaller scale
+  const reHtml = pageHtml
+    .replace(/transform: scale\(([0-9.]+)\)/g, `transform: scale(${thumbScale})`);
+  // Strip outer .page-wrap and .page-label, keep only inner content
+  const inner = reHtml.replace(/<div class="page-wrap"><div class="page-label">[^<]*<\/div>/, '<div class="page-wrap-inner">').replace(/<\/div>$/, "");
+  return `
+    <div class="thumb-card">
+      <div class="thumb-img" style="height: ${ctx.pageHpx * thumbScale}px;">${inner}</div>
+      <div class="thumb-meta">${idx} / ${total}</div>
+      <div class="thumb-label">${escapeHtml(label)}</div>
+    </div>
   `;
 }
 
@@ -657,14 +833,16 @@ function renderCover(label, idx, total, ctx) {
 
 function renderBackCover(label, idx, total, ctx) {
   const subColor = ctx.bgMode === "dark" ? "#888" : "#666";
+  const copy = ctx.structured?.back_cover_copy || ctx.leadText || "本書は、紙面デザインの可能性を一冊に編んだ試みである。";
+  const isbn = ctx.structured?.colophon?.isbn || "978-4-XXXX-XXXX-X";
   const wrap = `
     <div style="${pageWrapStyle(ctx)}">
       <div class="page-preview" style="${pageStyleStr(ctx)}">
         <div style="height: 100%; display: flex; flex-direction: column; justify-content: space-between;">
-          <div style="font-size: ${ctx.sizePx * 1.1}px; line-height: 1.7; max-width: ${ctx.w * 0.7}mm;">${escapeHtml(ctx.leadText || "本書は、紙面デザインの可能性を一冊に編んだ試みである。")}</div>
+          <div style="font-size: ${ctx.sizePx * 1.1}px; line-height: 1.7; max-width: ${ctx.w * 0.7}mm;">${escapeHtml(copy)}</div>
           <div style="font-size: ${ctx.sizePx * 0.8}px; color: ${subColor}; display: flex; justify-content: space-between; align-items: baseline; letter-spacing: 0.04em;">
-            <span>Editorial Design Knowledge DB</span>
-            <span style="font-family: monospace;">ISBN 978-4-XXXX-XXXX-X</span>
+            <span>${escapeHtml(ctx.structured?.colophon?.publisher || "Editorial Design Knowledge DB")}</span>
+            <span style="font-family: monospace;">ISBN ${escapeHtml(isbn)}</span>
           </div>
         </div>
       </div>
@@ -692,25 +870,32 @@ function renderTitlePage(label, idx, total, ctx) {
 function renderTOC(label, idx, total, ctx) {
   const subColor = ctx.bgMode === "dark" ? "#888" : "#666";
   const titleSize = ctx.sizePx * 1.8;
-  const tocItems = (ctx.medium === "magazine" || ctx.medium === "report") ? [
-    ["FEATURE", ctx.titleText, "008"],
-    ["ESSAY", "暮らしと余白について", "024"],
-    ["PORTRAIT", "ある編集者の机", "036"],
-    ["PHOTO", "都市の手触り", "048"],
-    ["INTERVIEW", "言葉の重さを量る", "060"],
-    ["COLUMN", "今月の本", "072"],
-    ["REVIEW", "新刊から五冊", "078"],
-    ["BACKMATTER", "編集後記", "094"],
-  ] : [
-    ["第一章", "始まりの一行", "011"],
-    ["第二章", "余白という器", "047"],
-    ["第三章", "文字の呼吸", "089"],
-    ["第四章", "ページの向こう側", "131"],
-    ["第五章", "編集の手", "175"],
-    ["第六章", "終わりの余白", "211"],
-    ["", "あとがき", "247"],
-    ["", "索引", "253"],
-  ];
+  let tocItems;
+  if (ctx.structured?.toc_items?.length) {
+    tocItems = ctx.structured.toc_items.map(t => [t.label || "", t.title || "", String(t.page || "").padStart(3, "0")]);
+  } else if (ctx.medium === "magazine" || ctx.medium === "report") {
+    tocItems = [
+      ["FEATURE", ctx.titleText, "008"],
+      ["ESSAY", "暮らしと余白について", "024"],
+      ["PORTRAIT", "ある編集者の机", "036"],
+      ["PHOTO", "都市の手触り", "048"],
+      ["INTERVIEW", "言葉の重さを量る", "060"],
+      ["COLUMN", "今月の本", "072"],
+      ["REVIEW", "新刊から五冊", "078"],
+      ["BACKMATTER", "編集後記", "094"],
+    ];
+  } else {
+    tocItems = [
+      ["第一章", "始まりの一行", "011"],
+      ["第二章", "余白という器", "047"],
+      ["第三章", "文字の呼吸", "089"],
+      ["第四章", "ページの向こう側", "131"],
+      ["第五章", "編集の手", "175"],
+      ["第六章", "終わりの余白", "211"],
+      ["", "あとがき", "247"],
+      ["", "索引", "253"],
+    ];
+  }
   const itemRows = tocItems.map(([k, t, p]) => `
     <div style="display: flex; align-items: baseline; padding: ${ctx.leadingRatio * 0.5}em 0; border-bottom: 1px dotted ${ctx.bgMode === 'dark' ? '#333' : '#ccc'};">
       <span style="min-width: 80px; font-size: ${ctx.sizePx * 0.78}px; color: ${subColor}; letter-spacing: 0.06em;">${escapeHtml(k)}</span>
@@ -733,16 +918,18 @@ function renderForeword(label, idx, total, ctx) {
   const subColor = ctx.bgMode === "dark" ? "#888" : "#666";
   const verticalClass = ctx.isVertical ? "vertical" : "";
   const verticalCss = ctx.isVertical ? "writing-mode: vertical-rl; text-orientation: mixed;" : "";
-  const text = ctx.medium === 'catalog' ? "本展覧会は、六年間の制作活動を通じて見えてきた素材と空間の関係を、ひとつの問いとして提示するものである。展示と図録という二つの形式が、互いに補い合うように構成されている。" : "本書を手に取ってくださった方へ。ここに書かれた言葉が、誰かの日常の片隅に少しの光を差し込むことができれば、それ以上の喜びはありません。";
+  const fallback = ctx.medium === 'catalog' ? "本展覧会は、六年間の制作活動を通じて見えてきた素材と空間の関係を、ひとつの問いとして提示するものである。" : "本書を手に取ってくださった方へ。ここに書かれた言葉が、誰かの日常の片隅に少しの光を差し込むことができれば、それ以上の喜びはありません。";
+  const fullText = ctx.structured?.foreword || ctx.leadText || fallback;
+  const paragraphs = fullText.split(/\n+/).filter(Boolean);
+  const author = ctx.structured?.author || (ctx.medium === 'catalog' ? '館長より' : '著者');
   const wrap = `
     <div style="${pageWrapStyle(ctx)}">
       <div class="page-preview ${verticalClass}" style="${pageStyleStr(ctx)} ${verticalCss}">
         <h2 style="font-size: ${ctx.sizePx * 1.6}px; font-weight: 700; letter-spacing: 0.04em; margin-bottom: 1.6em;">${ctx.medium === 'catalog' ? 'ごあいさつ' : 'はじめに'}</h2>
         <div style="font-size: ${ctx.sizePx * 1.05}px; line-height: 1.85; max-width: ${ctx.isVertical ? 'none' : (ctx.w - ctx.inner - ctx.outer) * 0.85 + 'mm'};">
-          <p style="margin: 0;">${escapeHtml(ctx.leadText || text)}</p>
-          <p style="margin-top: 1.4em; text-indent: 1em;">${escapeHtml(text)}</p>
+          ${paragraphs.map((p, i) => `<p style="margin: ${i === 0 ? '0' : '1em 0 0'}; ${i > 0 ? 'text-indent: 1em;' : ''}">${escapeHtml(p)}</p>`).join("")}
         </div>
-        <div style="position: absolute; ${ctx.isVertical ? 'left' : 'right'}: ${ctx.outer}mm; bottom: ${ctx.bottom * 1.2}mm; font-size: ${ctx.sizePx * 0.86}px; color: ${subColor}; letter-spacing: 0.04em;">${ctx.medium === 'catalog' ? '館長より' : '著者'}</div>
+        <div style="position: absolute; ${ctx.isVertical ? 'left' : 'right'}: ${ctx.outer}mm; bottom: ${ctx.bottom * 1.2}mm; font-size: ${ctx.sizePx * 0.86}px; color: ${subColor}; letter-spacing: 0.04em;">${escapeHtml(author)}</div>
       </div>
     </div>
   `;
@@ -751,13 +938,18 @@ function renderForeword(label, idx, total, ctx) {
 
 function renderChapterOpener(label, idx, total, ctx) {
   const subColor = ctx.bgMode === "dark" ? "#888" : "#666";
+  const ci = ctx._chapterIndex;
+  const ch = (ci != null && ctx.structured?.chapters?.[ci]) ? ctx.structured.chapters[ci] : null;
+  const chapterLabel = ch?.label || "CHAPTER 01";
+  const chapterTitle = ch?.title || ctx.titleText;
+  const chapterLead = ch?.lead || ctx.leadText;
   const wrap = `
     <div style="${pageWrapStyle(ctx)}">
       <div class="page-preview" style="${pageStyleStr(ctx)}">
         <div style="height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: flex-start;">
-          <div style="font-family: monospace; font-size: ${ctx.sizePx * 0.86}px; color: ${subColor}; letter-spacing: 0.2em;">CHAPTER 01</div>
-          <h2 style="margin-top: 0.6em; font-size: ${ctx.sizePx * 3.4}px; font-weight: 700; letter-spacing: 0.04em; line-height: 1.3;">${escapeHtml(ctx.titleText)}</h2>
-          <div style="margin-top: 1.6em; max-width: ${(ctx.w - ctx.inner - ctx.outer) * 0.7}mm; font-size: ${ctx.sizePx * 0.95}px; color: ${subColor}; line-height: 1.85;">${escapeHtml(ctx.leadText)}</div>
+          <div style="font-family: monospace; font-size: ${ctx.sizePx * 0.86}px; color: ${subColor}; letter-spacing: 0.2em;">${escapeHtml(chapterLabel)}</div>
+          <h2 style="margin-top: 0.6em; font-size: ${ctx.sizePx * 3.0}px; font-weight: 700; letter-spacing: 0.04em; line-height: 1.3;">${escapeHtml(chapterTitle)}</h2>
+          <div style="margin-top: 1.6em; max-width: ${(ctx.w - ctx.inner - ctx.outer) * 0.7}mm; font-size: ${ctx.sizePx * 0.95}px; color: ${subColor}; line-height: 1.85;">${escapeHtml(chapterLead)}</div>
         </div>
       </div>
     </div>
@@ -770,9 +962,13 @@ function renderBodyPage(label, idx, total, ctx) {
   const verticalCss = ctx.isVertical ? "writing-mode: vertical-rl; text-orientation: mixed;" : "";
   const subColor = ctx.bgMode === "dark" ? "#888" : "#666";
   const colRule = ctx.cols > 1 ? `column-count: ${ctx.cols}; column-gap: ${ctx.gutter}mm; column-fill: auto;` : "";
-  const bodyParas = (ctx.bodyText || "").split(/\n+/).filter(Boolean).map(p => `<p style="text-indent: 1em; margin: 0;">${escapeHtml(p)}</p>`).join('<p style="margin-top: 0.4em;"></p>');
+  const ci = ctx._chapterIndex;
+  const ch = (ci != null && ctx.structured?.chapters?.[ci]) ? ctx.structured.chapters[ci] : null;
+  const bodySource = ch?.body || ctx.bodyText || "";
+  const runnerTitle = ch?.title || ctx.titleText || "";
+  const bodyParas = bodySource.split(/\n+/).filter(Boolean).map(p => `<p style="text-indent: 1em; margin: 0;">${escapeHtml(p)}</p>`).join('<p style="margin-top: 0.4em;"></p>');
   const folio = `<div style="position: absolute; bottom: ${ctx.bottom * 0.4}mm; right: ${ctx.outer * 0.5}mm; font-size: ${ctx.sizePx * 0.7}px; color: ${subColor}; font-family: monospace;">— ${idx} —</div>`;
-  const runner = `<div style="position: absolute; top: ${ctx.top * 0.5}mm; left: ${ctx.inner}mm; font-size: ${ctx.sizePx * 0.7}px; color: ${subColor}; letter-spacing: 0.1em; text-transform: uppercase;">${escapeHtml(ctx.titleText.slice(0, 24))}</div>`;
+  const runner = `<div style="position: absolute; top: ${ctx.top * 0.5}mm; left: ${ctx.inner}mm; font-size: ${ctx.sizePx * 0.7}px; color: ${subColor}; letter-spacing: 0.1em; text-transform: uppercase;">${escapeHtml(runnerTitle.slice(0, 24))}</div>`;
   const wrap = `
     <div style="${pageWrapStyle(ctx)}">
       <div class="page-preview ${verticalClass}" style="${pageStyleStr(ctx)} ${verticalCss}">
@@ -868,7 +1064,11 @@ function renderColumn(label, idx, total, ctx) {
 function renderColophon(label, idx, total, ctx) {
   const subColor = ctx.bgMode === "dark" ? "#888" : "#666";
   const today = new Date();
-  const year = today.getFullYear();
+  const year = ctx.structured?.colophon?.year || today.getFullYear();
+  const printDate = ctx.structured?.colophon?.first_print_date || `${year}年5月5日`;
+  const publisher = ctx.structured?.colophon?.publisher || "株式会社サンプル出版";
+  const isbn = ctx.structured?.colophon?.isbn || "978-4-XXXX-XXXX-X";
+  const author = ctx.structured?.author || "";
   const wrap = `
     <div style="${pageWrapStyle(ctx)}">
       <div class="page-preview" style="${pageStyleStr(ctx)}">
@@ -877,13 +1077,14 @@ function renderColophon(label, idx, total, ctx) {
             <div><strong>${escapeHtml(ctx.titleText)}</strong></div>
             <div style="color: ${subColor};">${escapeHtml(ctx.subtitleText)}</div>
             <div style="margin-top: 0.8em; color: ${subColor};">
-              ${year}年5月5日　初版第1刷発行<br>
-              発行所　株式会社サンプル出版<br>
+              ${escapeHtml(printDate)}　初版第1刷発行<br>
+              ${author ? `著者　${escapeHtml(author)}<br>` : ""}
+              発行所　${escapeHtml(publisher)}<br>
               〒100-0001　東京都千代田区千代田1-1-1<br>
               印刷・製本　株式会社サンプル印刷<br>
               <br>
-              ©2026 Editorial Design Knowledge DB<br>
-              Printed in Japan　ISBN 978-4-XXXX-XXXX-X
+              ©${year} ${escapeHtml(author || ctx.titleText)}<br>
+              Printed in Japan　ISBN ${escapeHtml(isbn)}
             </div>
           </div>
         </div>

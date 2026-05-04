@@ -408,6 +408,12 @@ textarea:focus, input:focus, select:focus {
   min-height: 400px;
   max-height: 80vh;
 }
+.compose-stage.list-view {
+  align-items: stretch;
+}
+.compose-stage.list-view .page-wrap {
+  display: inline-flex;
+}
 .page-wrap { position: relative; }
 .page-label {
   font-family: var(--font);
@@ -421,6 +427,99 @@ textarea:focus, input:focus, select:focus {
 .spread-pair { display: flex; gap: 0; align-items: stretch; }
 .spread-pair .page-preview { box-shadow: 0 1px 6px rgba(0,0,0,0.12); }
 .spread-pair .page-preview:first-child { box-shadow: -2px 1px 6px rgba(0,0,0,0.12); }
+
+.list-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 16px;
+  width: 100%;
+}
+.list-grid .thumb-card {
+  background: var(--card);
+  border: 1px solid var(--border-light);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.list-grid .thumb-img {
+  background: var(--surface);
+  aspect-ratio: 0.7;
+  position: relative;
+  overflow: hidden;
+}
+.list-grid .thumb-img > div {
+  transform-origin: top left;
+  position: absolute;
+  top: 0; left: 0;
+}
+.list-grid .thumb-label {
+  font-size: 0.74rem;
+  font-weight: 500;
+  color: var(--text);
+  letter-spacing: 0.02em;
+}
+.list-grid .thumb-meta {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.view-toggle {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+.view-toggle button {
+  font-family: var(--font);
+  font-size: 0.74rem;
+  padding: 4px 12px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  cursor: pointer;
+  border-radius: var(--radius);
+  letter-spacing: 0.02em;
+}
+.view-toggle button.active {
+  background: var(--text);
+  color: var(--bg);
+  border-color: var(--text);
+}
+
+.flow-block {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px dashed var(--border-light);
+}
+.flow-block label {
+  font-size: 0.74rem;
+  color: var(--text-secondary);
+  margin: 6px 0 4px;
+  letter-spacing: 0.02em;
+  display: block;
+}
+.flow-block textarea {
+  width: 100%;
+  min-height: 140px;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 0.78rem;
+  border-radius: var(--radius);
+  line-height: 1.7;
+  resize: vertical;
+}
+.flow-status {
+  font-size: 0.74rem;
+  color: var(--text-muted);
+  margin-top: 6px;
+  line-height: 1.6;
+}
+.flow-status.error { color: #c62828; }
 
 .spec-block {
   font-size: 0.74rem;
@@ -623,9 +722,26 @@ footer a:hover { border-bottom-color: var(--accent-warm); }
           <button id="cc-print">印刷／PDF</button>
           <button id="cc-download">HTMLを保存</button>
         </div>
+
+        <div class="flow-block">
+          <label for="cc-fulltext">全文流し込み（任意）</label>
+          <textarea id="cc-fulltext" placeholder="原稿全文をここに貼り付けると、AIが内容を解析し、章立て・見出し・本文を選択デザインに合わせて自動配置します。"></textarea>
+          <div class="ctrl-actions" style="margin-top: 8px;">
+            <button id="cc-flow" class="primary">AIで組版判定</button>
+            <button id="cc-flow-clear">流し込みクリア</button>
+          </div>
+          <div id="cc-flow-status" class="flow-status"></div>
+        </div>
+
         <div class="spec-block" id="cc-spec"></div>
       </div>
-      <div class="compose-stage" id="compose-stage"></div>
+      <div style="display: flex; flex-direction: column;">
+        <div class="view-toggle">
+          <button id="vt-detail" class="active" data-view="detail">ページ詳細</button>
+          <button id="vt-list" data-view="list">一覧（サムネイル）</button>
+        </div>
+        <div class="compose-stage" id="compose-stage"></div>
+      </div>
     </div>
   </div>
 </div>
