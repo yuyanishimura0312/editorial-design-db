@@ -401,11 +401,26 @@ textarea:focus, input:focus, select:focus {
   background: var(--surface);
   padding: 24px;
   display: flex;
-  justify-content: center;
-  align-items: flex-start;
+  flex-direction: column;
+  gap: 24px;
+  align-items: center;
   overflow: auto;
   min-height: 400px;
+  max-height: 80vh;
 }
+.page-wrap { position: relative; }
+.page-label {
+  font-family: var(--font);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  text-align: center;
+}
+.spread-pair { display: flex; gap: 0; align-items: stretch; }
+.spread-pair .page-preview { box-shadow: 0 1px 6px rgba(0,0,0,0.12); }
+.spread-pair .page-preview:first-child { box-shadow: -2px 1px 6px rgba(0,0,0,0.12); }
 
 .spec-block {
   font-size: 0.74rem;

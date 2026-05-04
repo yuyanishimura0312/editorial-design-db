@@ -445,9 +445,68 @@ function closeCompose() {
   document.body.style.overflow = "";
 }
 
+// Page layout sequences per medium
+const PAGE_SEQUENCES = {
+  book: [
+    { role: "cover", label: "表紙" },
+    { role: "title_page", label: "扉" },
+    { role: "toc", label: "目次" },
+    { role: "foreword", label: "はじめに" },
+    { role: "chapter_opener", label: "章扉" },
+    { role: "body", label: "本文" },
+    { role: "colophon", label: "奥付" },
+    { role: "back_cover", label: "裏表紙" },
+  ],
+  magazine: [
+    { role: "cover", label: "表紙" },
+    { role: "toc", label: "目次" },
+    { role: "feature_opener", label: "特集扉" },
+    { role: "feature_spread", label: "特集本文" },
+    { role: "article", label: "記事" },
+    { role: "column", label: "コラム" },
+    { role: "colophon", label: "奥付" },
+    { role: "back_cover", label: "裏表紙" },
+  ],
+  newspaper: [
+    { role: "front_page", label: "1面" },
+    { role: "inside_page", label: "総合面" },
+    { role: "feature_page", label: "特集面" },
+    { role: "back_page", label: "最終面" },
+  ],
+  report: [
+    { role: "cover", label: "表紙" },
+    { role: "toc", label: "目次" },
+    { role: "exec_summary", label: "エグゼクティブサマリー" },
+    { role: "body", label: "本文" },
+    { role: "data_page", label: "データページ" },
+    { role: "back_cover", label: "裏表紙" },
+  ],
+  catalog: [
+    { role: "cover", label: "表紙" },
+    { role: "foreword", label: "ごあいさつ" },
+    { role: "toc", label: "目次" },
+    { role: "work_image", label: "作品（画像主）" },
+    { role: "work_text", label: "作品解説" },
+    { role: "colophon", label: "奥付" },
+  ],
+  zine: [
+    { role: "cover", label: "表紙" },
+    { role: "toc", label: "目次／インデックス" },
+    { role: "feature_spread", label: "本文見開き" },
+    { role: "editorial_note", label: "編集後記" },
+    { role: "back_cover", label: "裏表紙" },
+  ],
+  pamphlet: [
+    { role: "cover", label: "表面" },
+    { role: "feature_spread", label: "中面" },
+    { role: "back_cover", label: "裏面" },
+  ],
+};
+
 function renderComposePage() {
   if (!CURRENT_COORD) return;
   const c = CURRENT_COORD;
+  const p = CURRENT_PATTERN;
   const trim = c.trim_size_mm || c.trim_size || [148, 210];
   const [w, h] = trim.map(Number);
   const margin = c.margin_mm || c.margin || { inner: 18, outer: 18, top: 22, bottom: 26 };
@@ -470,82 +529,491 @@ function renderComposePage() {
   const bgMode = els.ccBgmode.value;
   const fontStack = resolveFontStack(face, isVertical);
 
-  // Convert mm -> px at 3.78 px/mm = 96 dpi (CSS standard)
   const PX_PER_MM = 3.7795;
   const pageWpx = w * PX_PER_MM;
   const pageHpx = h * PX_PER_MM;
-  // Convert pt -> px at 1pt = 1/72 inch = 96/72 px
   const PX_PER_PT = 96 / 72;
   const sizePx = sizePt * PX_PER_PT;
-  const leadingPx = leadingPt * PX_PER_PT;
   const leadingRatio = (leadingPt / sizePt).toFixed(3);
 
-  // scale to fit stage width approx (max 720px wide page)
   const stageWidth = els.composeStage.clientWidth - 48;
-  const maxPageW = Math.min(720, stageWidth || 600);
+  const maxPageW = Math.min(560, stageWidth || 480);
   const scale = Math.min(1, maxPageW / pageWpx);
 
-  const titleSize = sizePx * 2.4;
-  const leadSize = sizePx * 1.05;
+  // Determine page sequence based on medium
+  const medium = (p.medium || "book").toLowerCase();
+  const sequence = PAGE_SEQUENCES[medium] || PAGE_SEQUENCES.book;
 
-  const bgFill = bgMode === "dark" ? "#121212" : "#FFFFFF";
-  const fgColor = bgMode === "dark" ? "#E8E6E2" : "#121212";
-  const subColor = bgMode === "dark" ? "#999" : "#555";
+  const ctx = {
+    titleText: els.ccTitle.value,
+    subtitleText: els.ccSubtitle.value,
+    leadText: els.ccLead.value,
+    bodyText: els.ccBody.value,
+    isVertical,
+    bgMode,
+    fontStack,
+    pageWpx, pageHpx, scale,
+    PX_PER_MM, PX_PER_PT,
+    sizePx, sizePt, leadingRatio, tracking, cols, gutter, measure, face,
+    inner, top, outer, bottom, w, h,
+    medium, subMedium: p.sub_medium,
+    pattern: p,
+  };
 
-  const titleText = escapeHtml(els.ccTitle.value);
-  const subtitleText = escapeHtml(els.ccSubtitle.value);
-  const leadText = escapeHtml(els.ccLead.value);
-  const bodyParas = (els.ccBody.value || "").split(/\n+/).filter(Boolean)
-    .map(p => `<p>${escapeHtml(p)}</p>`).join("");
+  const pagesHtml = sequence.map((step, idx) => renderPageByRole(step.role, step.label, idx + 1, sequence.length, ctx)).join("");
 
-  // Body column container with column-rule support via CSS columns
-  const colRule = cols > 1 ? `column-count: ${cols}; column-gap: ${gutter}mm; column-fill: auto;` : "";
+  els.composeStage.innerHTML = pagesHtml;
 
-  // Build inner HTML
-  const headerBlock = `
-    <header class="pp-header" style="margin-bottom: ${leadingPx * 0.6}px;">
-      <h1 class="pp-title" style="font-size: ${titleSize}px; font-weight: 700; letter-spacing: 0.02em; line-height: 1.35;">${titleText}</h1>
-      ${subtitleText ? `<div class="pp-subtitle" style="font-size: ${sizePx * 0.86}px; color: ${subColor}; margin-top: 0.4em; letter-spacing: 0.04em;">${subtitleText}</div>` : ""}
-      ${leadText ? `<div class="pp-lead" style="font-size: ${leadSize}px; color: ${subColor};">${leadText}</div>` : ""}
-    </header>
-  `;
-
-  const bodyBlock = `
-    <div class="pp-body" style="font-size: ${sizePx}px; line-height: ${leadingRatio}; ${tracking ? `letter-spacing: ${tracking}em;` : ""} ${colRule}">
-      ${bodyParas}
-    </div>
-  `;
-
-  const folio = `<div class="pp-folio" style="bottom: ${bottom * 0.4}mm; right: ${outer * 0.4}mm; font-size: ${sizePx * 0.7}px;">— 1 —</div>`;
-
-  const pageStyle = `
-    width: ${pageWpx}px;
-    height: ${pageHpx}px;
-    padding: ${top}mm ${outer}mm ${bottom}mm ${inner}mm;
-    font-family: ${fontStack};
-    background: ${bgFill};
-    color: ${fgColor};
-    transform: scale(${scale});
-    transform-origin: top left;
-    box-sizing: border-box;
-  `;
-
-  const inner_html = isVertical
-    ? `<div class="page-preview vertical" style="${pageStyle} writing-mode: vertical-rl; text-orientation: mixed;">${headerBlock}${bodyBlock}${folio}</div>`
-    : `<div class="page-preview" style="${pageStyle}">${headerBlock}${bodyBlock}${folio}</div>`;
-
-  // Wrapper to hold space for scaled element
-  const wrapH = pageHpx * scale + 16;
-  els.composeStage.innerHTML = `<div style="width: ${pageWpx * scale}px; height: ${wrapH}px; position: relative;">${inner_html}</div>`;
-
-  // Spec block
   els.ccSpec.innerHTML = `
     <strong>仕様</strong><br>
     判型 ${w}×${h}mm／マージン 内${inner}/上${top}/外${outer}/下${bottom}mm<br>
     ${cols}段組${cols > 1 ? `／ガター ${gutter}mm` : ""}／ベースライン ${baselinePt}pt<br>
     本文 ${sizePt}pt／行送り ${leadingPt}pt（行送り比 ${leadingRatio}）${tracking ? `／字間 ${tracking}em` : ""}${measure ? `／${measure}字詰め` : ""}<br>
-    書体 ${escapeHtml(face || "(未指定)")} → CSS: <code style="font-size:0.9em;">${escapeHtml(fontStack)}</code>
+    書体 ${escapeHtml(face || "(未指定)")}<br>
+    <strong>構成</strong>: ${sequence.map(s => s.label).join(" → ")}
   `;
+}
+
+function pageStyleStr(ctx, opts = {}) {
+  const bgFill = opts.bg || (ctx.bgMode === "dark" ? "#121212" : "#FFFFFF");
+  const fgColor = opts.fg || (ctx.bgMode === "dark" ? "#E8E6E2" : "#121212");
+  const padTop = opts.padTop != null ? opts.padTop : ctx.top;
+  const padOuter = opts.padOuter != null ? opts.padOuter : ctx.outer;
+  const padBottom = opts.padBottom != null ? opts.padBottom : ctx.bottom;
+  const padInner = opts.padInner != null ? opts.padInner : ctx.inner;
+  return `
+    width: ${ctx.pageWpx}px;
+    height: ${ctx.pageHpx}px;
+    padding: ${padTop}mm ${padOuter}mm ${padBottom}mm ${padInner}mm;
+    font-family: ${ctx.fontStack};
+    background: ${bgFill};
+    color: ${fgColor};
+    transform: scale(${ctx.scale});
+    transform-origin: top left;
+    box-sizing: border-box;
+    ${opts.extra || ""}
+  `;
+}
+
+function pageWrapStyle(ctx) {
+  const wrapW = ctx.pageWpx * ctx.scale;
+  const wrapH = ctx.pageHpx * ctx.scale;
+  return `width: ${wrapW}px; height: ${wrapH}px; position: relative;`;
+}
+
+function pageWrap(label, idx, total, inner) {
+  return `<div class="page-wrap"><div class="page-label">${escapeHtml(label)} (${idx}/${total})</div>${inner}</div>`;
+}
+
+function renderPageByRole(role, label, idx, total, ctx) {
+  switch (role) {
+    case "cover": return renderCover(label, idx, total, ctx);
+    case "back_cover": return renderBackCover(label, idx, total, ctx);
+    case "title_page": return renderTitlePage(label, idx, total, ctx);
+    case "toc": return renderTOC(label, idx, total, ctx);
+    case "foreword": return renderForeword(label, idx, total, ctx);
+    case "chapter_opener": return renderChapterOpener(label, idx, total, ctx);
+    case "body": return renderBodyPage(label, idx, total, ctx);
+    case "feature_opener": return renderFeatureOpener(label, idx, total, ctx);
+    case "feature_spread": return renderFeatureSpread(label, idx, total, ctx);
+    case "article": return renderArticle(label, idx, total, ctx);
+    case "column": return renderColumn(label, idx, total, ctx);
+    case "colophon": return renderColophon(label, idx, total, ctx);
+    case "front_page": return renderNewspaperFront(label, idx, total, ctx);
+    case "inside_page": return renderNewspaperInside(label, idx, total, ctx);
+    case "feature_page": return renderNewspaperFeature(label, idx, total, ctx);
+    case "back_page": return renderNewspaperBack(label, idx, total, ctx);
+    case "exec_summary": return renderExecSummary(label, idx, total, ctx);
+    case "data_page": return renderDataPage(label, idx, total, ctx);
+    case "work_image": return renderWorkImage(label, idx, total, ctx);
+    case "work_text": return renderWorkText(label, idx, total, ctx);
+    case "editorial_note": return renderEditorialNote(label, idx, total, ctx);
+    default: return renderBodyPage(label, idx, total, ctx);
+  }
+}
+
+// --------- role renderers ---------
+
+function renderCover(label, idx, total, ctx) {
+  const titleSize = ctx.sizePx * 4.2;
+  const subSize = ctx.sizePx * 1.05;
+  const isMag = ctx.medium === "magazine";
+  const accentColor = ctx.bgMode === "dark" ? "#CC1400" : "#CC1400";
+  const subColor = ctx.bgMode === "dark" ? "#888" : "#666";
+  const wrap = `
+    <div style="${pageWrapStyle(ctx)}">
+      <div class="page-preview" style="${pageStyleStr(ctx, { padTop: ctx.top * 1.5, padBottom: ctx.bottom * 1.5 })}">
+        <div style="font-size: ${ctx.sizePx * 0.7}px; letter-spacing: 0.18em; color: ${subColor}; text-transform: uppercase;">EDITORIAL DESIGN SAMPLE</div>
+        <div style="margin-top: ${ctx.h * 0.18}mm;">
+          <h1 style="font-size: ${titleSize}px; font-weight: 900; line-height: 1.15; letter-spacing: 0.02em;">${escapeHtml(ctx.titleText)}</h1>
+          ${ctx.subtitleText ? `<div style="margin-top: 1em; font-size: ${subSize}px; color: ${subColor}; line-height: 1.6;">${escapeHtml(ctx.subtitleText)}</div>` : ""}
+        </div>
+        ${isMag ? `<div style="position: absolute; bottom: ${ctx.bottom * 1.2}mm; left: ${ctx.inner}mm; right: ${ctx.outer}mm; display: flex; justify-content: space-between; align-items: baseline; font-size: ${ctx.sizePx * 0.78}px; color: ${subColor};"><span>Issue 01 / 2026</span><span style="font-weight:700; color:${accentColor}; letter-spacing: 0.06em;">SPECIAL EDITION</span></div>` : `<div style="position: absolute; bottom: ${ctx.bottom * 1.2}mm; left: ${ctx.inner}mm; font-size: ${ctx.sizePx * 0.86}px; color: ${subColor}; letter-spacing: 0.04em;">2026</div>`}
+      </div>
+    </div>
+  `;
+  return pageWrap(label, idx, total, wrap);
+}
+
+function renderBackCover(label, idx, total, ctx) {
+  const subColor = ctx.bgMode === "dark" ? "#888" : "#666";
+  const wrap = `
+    <div style="${pageWrapStyle(ctx)}">
+      <div class="page-preview" style="${pageStyleStr(ctx)}">
+        <div style="height: 100%; display: flex; flex-direction: column; justify-content: space-between;">
+          <div style="font-size: ${ctx.sizePx * 1.1}px; line-height: 1.7; max-width: ${ctx.w * 0.7}mm;">${escapeHtml(ctx.leadText || "本書は、紙面デザインの可能性を一冊に編んだ試みである。")}</div>
+          <div style="font-size: ${ctx.sizePx * 0.8}px; color: ${subColor}; display: flex; justify-content: space-between; align-items: baseline; letter-spacing: 0.04em;">
+            <span>Editorial Design Knowledge DB</span>
+            <span style="font-family: monospace;">ISBN 978-4-XXXX-XXXX-X</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+  return pageWrap(label, idx, total, wrap);
+}
+
+function renderTitlePage(label, idx, total, ctx) {
+  const titleSize = ctx.sizePx * 3.6;
+  const subColor = ctx.bgMode === "dark" ? "#888" : "#555";
+  const wrap = `
+    <div style="${pageWrapStyle(ctx)}">
+      <div class="page-preview" style="${pageStyleStr(ctx)}">
+        <div style="height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: ${ctx.isVertical ? 'flex-end' : 'flex-start'};">
+          <h1 style="font-size: ${titleSize}px; font-weight: 700; line-height: 1.3; letter-spacing: 0.02em;">${escapeHtml(ctx.titleText)}</h1>
+          ${ctx.subtitleText ? `<div style="margin-top: 1.2em; font-size: ${ctx.sizePx * 1.0}px; color: ${subColor}; letter-spacing: 0.04em;">${escapeHtml(ctx.subtitleText)}</div>` : ""}
+        </div>
+      </div>
+    </div>
+  `;
+  return pageWrap(label, idx, total, wrap);
+}
+
+function renderTOC(label, idx, total, ctx) {
+  const subColor = ctx.bgMode === "dark" ? "#888" : "#666";
+  const titleSize = ctx.sizePx * 1.8;
+  const tocItems = (ctx.medium === "magazine" || ctx.medium === "report") ? [
+    ["FEATURE", ctx.titleText, "008"],
+    ["ESSAY", "暮らしと余白について", "024"],
+    ["PORTRAIT", "ある編集者の机", "036"],
+    ["PHOTO", "都市の手触り", "048"],
+    ["INTERVIEW", "言葉の重さを量る", "060"],
+    ["COLUMN", "今月の本", "072"],
+    ["REVIEW", "新刊から五冊", "078"],
+    ["BACKMATTER", "編集後記", "094"],
+  ] : [
+    ["第一章", "始まりの一行", "011"],
+    ["第二章", "余白という器", "047"],
+    ["第三章", "文字の呼吸", "089"],
+    ["第四章", "ページの向こう側", "131"],
+    ["第五章", "編集の手", "175"],
+    ["第六章", "終わりの余白", "211"],
+    ["", "あとがき", "247"],
+    ["", "索引", "253"],
+  ];
+  const itemRows = tocItems.map(([k, t, p]) => `
+    <div style="display: flex; align-items: baseline; padding: ${ctx.leadingRatio * 0.5}em 0; border-bottom: 1px dotted ${ctx.bgMode === 'dark' ? '#333' : '#ccc'};">
+      <span style="min-width: 80px; font-size: ${ctx.sizePx * 0.78}px; color: ${subColor}; letter-spacing: 0.06em;">${escapeHtml(k)}</span>
+      <span style="flex: 1; font-size: ${ctx.sizePx}px;">${escapeHtml(t)}</span>
+      <span style="font-size: ${ctx.sizePx * 0.86}px; color: ${subColor}; font-family: monospace;">${escapeHtml(p)}</span>
+    </div>
+  `).join("");
+  const wrap = `
+    <div style="${pageWrapStyle(ctx)}">
+      <div class="page-preview" style="${pageStyleStr(ctx)}">
+        <h2 style="font-size: ${titleSize}px; font-weight: 700; letter-spacing: 0.04em; margin-bottom: 1.4em; padding-bottom: 0.6em; border-bottom: 2px solid currentColor;">${ctx.medium === 'book' ? '目次' : 'CONTENTS'}</h2>
+        <div>${itemRows}</div>
+      </div>
+    </div>
+  `;
+  return pageWrap(label, idx, total, wrap);
+}
+
+function renderForeword(label, idx, total, ctx) {
+  const subColor = ctx.bgMode === "dark" ? "#888" : "#666";
+  const verticalClass = ctx.isVertical ? "vertical" : "";
+  const verticalCss = ctx.isVertical ? "writing-mode: vertical-rl; text-orientation: mixed;" : "";
+  const text = ctx.medium === 'catalog' ? "本展覧会は、六年間の制作活動を通じて見えてきた素材と空間の関係を、ひとつの問いとして提示するものである。展示と図録という二つの形式が、互いに補い合うように構成されている。" : "本書を手に取ってくださった方へ。ここに書かれた言葉が、誰かの日常の片隅に少しの光を差し込むことができれば、それ以上の喜びはありません。";
+  const wrap = `
+    <div style="${pageWrapStyle(ctx)}">
+      <div class="page-preview ${verticalClass}" style="${pageStyleStr(ctx)} ${verticalCss}">
+        <h2 style="font-size: ${ctx.sizePx * 1.6}px; font-weight: 700; letter-spacing: 0.04em; margin-bottom: 1.6em;">${ctx.medium === 'catalog' ? 'ごあいさつ' : 'はじめに'}</h2>
+        <div style="font-size: ${ctx.sizePx * 1.05}px; line-height: 1.85; max-width: ${ctx.isVertical ? 'none' : (ctx.w - ctx.inner - ctx.outer) * 0.85 + 'mm'};">
+          <p style="margin: 0;">${escapeHtml(ctx.leadText || text)}</p>
+          <p style="margin-top: 1.4em; text-indent: 1em;">${escapeHtml(text)}</p>
+        </div>
+        <div style="position: absolute; ${ctx.isVertical ? 'left' : 'right'}: ${ctx.outer}mm; bottom: ${ctx.bottom * 1.2}mm; font-size: ${ctx.sizePx * 0.86}px; color: ${subColor}; letter-spacing: 0.04em;">${ctx.medium === 'catalog' ? '館長より' : '著者'}</div>
+      </div>
+    </div>
+  `;
+  return pageWrap(label, idx, total, wrap);
+}
+
+function renderChapterOpener(label, idx, total, ctx) {
+  const subColor = ctx.bgMode === "dark" ? "#888" : "#666";
+  const wrap = `
+    <div style="${pageWrapStyle(ctx)}">
+      <div class="page-preview" style="${pageStyleStr(ctx)}">
+        <div style="height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: flex-start;">
+          <div style="font-family: monospace; font-size: ${ctx.sizePx * 0.86}px; color: ${subColor}; letter-spacing: 0.2em;">CHAPTER 01</div>
+          <h2 style="margin-top: 0.6em; font-size: ${ctx.sizePx * 3.4}px; font-weight: 700; letter-spacing: 0.04em; line-height: 1.3;">${escapeHtml(ctx.titleText)}</h2>
+          <div style="margin-top: 1.6em; max-width: ${(ctx.w - ctx.inner - ctx.outer) * 0.7}mm; font-size: ${ctx.sizePx * 0.95}px; color: ${subColor}; line-height: 1.85;">${escapeHtml(ctx.leadText)}</div>
+        </div>
+      </div>
+    </div>
+  `;
+  return pageWrap(label, idx, total, wrap);
+}
+
+function renderBodyPage(label, idx, total, ctx) {
+  const verticalClass = ctx.isVertical ? "vertical" : "";
+  const verticalCss = ctx.isVertical ? "writing-mode: vertical-rl; text-orientation: mixed;" : "";
+  const subColor = ctx.bgMode === "dark" ? "#888" : "#666";
+  const colRule = ctx.cols > 1 ? `column-count: ${ctx.cols}; column-gap: ${ctx.gutter}mm; column-fill: auto;` : "";
+  const bodyParas = (ctx.bodyText || "").split(/\n+/).filter(Boolean).map(p => `<p style="text-indent: 1em; margin: 0;">${escapeHtml(p)}</p>`).join('<p style="margin-top: 0.4em;"></p>');
+  const folio = `<div style="position: absolute; bottom: ${ctx.bottom * 0.4}mm; right: ${ctx.outer * 0.5}mm; font-size: ${ctx.sizePx * 0.7}px; color: ${subColor}; font-family: monospace;">— ${idx} —</div>`;
+  const runner = `<div style="position: absolute; top: ${ctx.top * 0.5}mm; left: ${ctx.inner}mm; font-size: ${ctx.sizePx * 0.7}px; color: ${subColor}; letter-spacing: 0.1em; text-transform: uppercase;">${escapeHtml(ctx.titleText.slice(0, 24))}</div>`;
+  const wrap = `
+    <div style="${pageWrapStyle(ctx)}">
+      <div class="page-preview ${verticalClass}" style="${pageStyleStr(ctx)} ${verticalCss}">
+        ${runner}
+        <div style="font-size: ${ctx.sizePx}px; line-height: ${ctx.leadingRatio}; ${ctx.tracking ? `letter-spacing: ${ctx.tracking}em;` : ""} ${colRule} margin-top: ${ctx.top * 0.3}mm; height: calc(100% - ${ctx.top * 0.3}mm - ${ctx.bottom * 0.3}mm);">
+          ${bodyParas}
+        </div>
+        ${folio}
+      </div>
+    </div>
+  `;
+  return pageWrap(label, idx, total, wrap);
+}
+
+function renderFeatureOpener(label, idx, total, ctx) {
+  const accent = "#CC1400";
+  const subColor = ctx.bgMode === "dark" ? "#888" : "#666";
+  const wrap = `
+    <div style="${pageWrapStyle(ctx)}">
+      <div class="page-preview" style="${pageStyleStr(ctx, { padTop: 0, padBottom: 0, padInner: 0, padOuter: 0 })}">
+        <div style="height: 60%; background: linear-gradient(135deg, #2a2a2a 0%, #444 100%); display: flex; align-items: flex-end; padding: ${ctx.bottom}mm ${ctx.outer}mm ${ctx.bottom * 0.5}mm ${ctx.inner}mm;">
+          <div style="color: #fff;">
+            <div style="font-size: ${ctx.sizePx * 0.78}px; letter-spacing: 0.2em; color: #fff; opacity: 0.7;">FEATURE</div>
+            <h2 style="margin-top: 0.4em; font-size: ${ctx.sizePx * 3.4}px; font-weight: 900; line-height: 1.15; letter-spacing: 0.02em;">${escapeHtml(ctx.titleText)}</h2>
+          </div>
+        </div>
+        <div style="padding: ${ctx.top * 1.2}mm ${ctx.outer}mm ${ctx.bottom}mm ${ctx.inner}mm;">
+          <div style="font-size: ${ctx.sizePx * 1.1}px; line-height: 1.85; color: ${subColor}; max-width: ${(ctx.w - ctx.inner - ctx.outer) * 0.85}mm;">
+            <span style="color: ${accent}; font-weight: 700;">__ </span>${escapeHtml(ctx.leadText)}
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+  return pageWrap(label, idx, total, wrap);
+}
+
+function renderFeatureSpread(label, idx, total, ctx) {
+  // Spread = two pages side by side
+  const colRule = ctx.cols > 1 ? `column-count: ${ctx.cols}; column-gap: ${ctx.gutter}mm; column-fill: auto;` : "";
+  const subColor = ctx.bgMode === "dark" ? "#888" : "#666";
+  const bodyParas = (ctx.bodyText || "").split(/\n+/).filter(Boolean).map(p => `<p style="text-indent: 1em; margin: 0;">${escapeHtml(p)}</p>`).join('<p style="margin-top: 0.4em;"></p>');
+  const leftPage = `
+    <div class="page-preview" style="${pageStyleStr(ctx, { padInner: ctx.outer, padOuter: ctx.inner })}">
+      <div style="height: 100%; background: linear-gradient(180deg, #aaa 0%, #ddd 100%); display: flex; align-items: flex-end; padding: ${ctx.bottom * 0.6}mm ${ctx.outer * 0.5}mm; margin: -${ctx.top}mm -${ctx.outer}mm -${ctx.bottom}mm -${ctx.inner}mm;">
+        <div style="color: #fff;">
+          <div style="font-size: ${ctx.sizePx * 0.7}px; letter-spacing: 0.15em; opacity: 0.85;">PHOTO ESSAY</div>
+          <div style="font-size: ${ctx.sizePx * 0.78}px; margin-top: 0.4em; opacity: 0.85;">caption: 朝の光と机の上のコーヒー</div>
+        </div>
+      </div>
+    </div>
+  `;
+  const rightPage = `
+    <div class="page-preview" style="${pageStyleStr(ctx)}">
+      <h3 style="font-size: ${ctx.sizePx * 1.4}px; font-weight: 700; margin-bottom: 1em; letter-spacing: 0.04em;">${escapeHtml(ctx.titleText)}</h3>
+      <div style="font-size: ${ctx.sizePx * 1.0}px; line-height: 1.7; color: ${subColor}; margin-bottom: 1.4em; padding-bottom: 1em; border-bottom: 1px solid ${ctx.bgMode === 'dark' ? '#333' : '#ddd'};">${escapeHtml(ctx.leadText)}</div>
+      <div style="font-size: ${ctx.sizePx}px; line-height: ${ctx.leadingRatio}; ${ctx.tracking ? `letter-spacing: ${ctx.tracking}em;` : ""} ${colRule}">
+        ${bodyParas}
+      </div>
+    </div>
+  `;
+  const wrap = `
+    <div class="spread-pair" style="width: ${ctx.pageWpx * ctx.scale * 2}px;">
+      ${leftPage}${rightPage}
+    </div>
+  `;
+  return pageWrap(label + "（見開き）", idx, total, wrap);
+}
+
+function renderArticle(label, idx, total, ctx) {
+  return renderBodyPage(label, idx, total, ctx);
+}
+
+function renderColumn(label, idx, total, ctx) {
+  const subColor = ctx.bgMode === "dark" ? "#888" : "#666";
+  const wrap = `
+    <div style="${pageWrapStyle(ctx)}">
+      <div class="page-preview" style="${pageStyleStr(ctx)}">
+        <div style="border-left: 3px solid #CC1400; padding-left: 1em;">
+          <div style="font-size: ${ctx.sizePx * 0.78}px; letter-spacing: 0.18em; color: #CC1400;">COLUMN</div>
+          <h3 style="margin-top: 0.4em; font-size: ${ctx.sizePx * 1.5}px; font-weight: 700; letter-spacing: 0.02em;">${escapeHtml(ctx.titleText)}</h3>
+        </div>
+        <div style="margin-top: 2em; font-size: ${ctx.sizePx}px; line-height: ${ctx.leadingRatio}; max-width: ${(ctx.w - ctx.inner - ctx.outer) * 0.9}mm;">
+          ${(ctx.bodyText || "").split(/\n+/).filter(Boolean).slice(0, 2).map(p => `<p style="text-indent: 1em; margin: 0 0 0.6em;">${escapeHtml(p)}</p>`).join("")}
+        </div>
+        <div style="margin-top: 1.6em; font-size: ${ctx.sizePx * 0.82}px; color: ${subColor}; letter-spacing: 0.04em;">— ${escapeHtml(ctx.subtitleText.split('／')[0] || '匿名')}</div>
+      </div>
+    </div>
+  `;
+  return pageWrap(label, idx, total, wrap);
+}
+
+function renderColophon(label, idx, total, ctx) {
+  const subColor = ctx.bgMode === "dark" ? "#888" : "#666";
+  const today = new Date();
+  const year = today.getFullYear();
+  const wrap = `
+    <div style="${pageWrapStyle(ctx)}">
+      <div class="page-preview" style="${pageStyleStr(ctx)}">
+        <div style="height: 100%; display: flex; flex-direction: column; justify-content: flex-end;">
+          <div style="border-top: 1px solid currentColor; padding-top: 1em; font-size: ${ctx.sizePx * 0.86}px; line-height: 2;">
+            <div><strong>${escapeHtml(ctx.titleText)}</strong></div>
+            <div style="color: ${subColor};">${escapeHtml(ctx.subtitleText)}</div>
+            <div style="margin-top: 0.8em; color: ${subColor};">
+              ${year}年5月5日　初版第1刷発行<br>
+              発行所　株式会社サンプル出版<br>
+              〒100-0001　東京都千代田区千代田1-1-1<br>
+              印刷・製本　株式会社サンプル印刷<br>
+              <br>
+              ©2026 Editorial Design Knowledge DB<br>
+              Printed in Japan　ISBN 978-4-XXXX-XXXX-X
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+  return pageWrap(label, idx, total, wrap);
+}
+
+function renderNewspaperFront(label, idx, total, ctx) {
+  const subColor = ctx.bgMode === "dark" ? "#888" : "#444";
+  const accent = "#CC1400";
+  const wrap = `
+    <div style="${pageWrapStyle(ctx)}">
+      <div class="page-preview" style="${pageStyleStr(ctx, { padTop: ctx.top * 0.5 })}">
+        <div style="display: flex; justify-content: space-between; align-items: baseline; padding-bottom: 0.6em; border-bottom: 3px double currentColor;">
+          <h1 style="font-family: 'Noto Serif JP', serif; font-size: ${ctx.sizePx * 3.6}px; font-weight: 900; letter-spacing: 0.06em;">EDITORIAL TIMES</h1>
+          <span style="font-size: ${ctx.sizePx * 0.8}px; color: ${subColor};">2026年5月5日 火曜日</span>
+        </div>
+        <div style="margin-top: 1em; column-count: 4; column-gap: ${ctx.gutter}mm;">
+          <h2 style="font-size: ${ctx.sizePx * 2.2}px; font-weight: 900; line-height: 1.3; column-span: all; margin-bottom: 0.6em; padding-bottom: 0.4em; border-bottom: 1px solid currentColor;">${escapeHtml(ctx.titleText)}</h2>
+          <div style="font-size: ${ctx.sizePx * 1.1}px; line-height: 1.6; color: ${accent}; font-weight: 500; column-span: all; margin-bottom: 1em;">${escapeHtml(ctx.leadText)}</div>
+          <div style="font-size: ${ctx.sizePx * 0.9}px; line-height: 1.7;">
+            ${(ctx.bodyText || "").split(/\n+/).filter(Boolean).map(p => `<p style="text-indent: 1em; margin: 0 0 0.4em;">${escapeHtml(p)}</p>`).join("")}
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+  return pageWrap(label, idx, total, wrap);
+}
+
+function renderNewspaperInside(label, idx, total, ctx) {
+  return renderBodyPage(label, idx, total, ctx);
+}
+
+function renderNewspaperFeature(label, idx, total, ctx) {
+  return renderFeatureSpread(label, idx, total, ctx);
+}
+
+function renderNewspaperBack(label, idx, total, ctx) {
+  return renderColumn(label, idx, total, ctx);
+}
+
+function renderExecSummary(label, idx, total, ctx) {
+  const subColor = ctx.bgMode === "dark" ? "#888" : "#555";
+  const accent = "#CC1400";
+  const items = [
+    "事業活動による炭素排出量を前年比18%削減（測定範囲拡大を含む）",
+    "サプライチェーン全体での労働環境監査を完了、課題8件を特定",
+    "地域コミュニティとの対話プログラムを新規に3つ立ち上げ",
+    "従業員エンゲージメントスコアが72→81に上昇",
+    "次年度の重点投資領域として再生可能エネルギー転換を決定",
+  ];
+  const wrap = `
+    <div style="${pageWrapStyle(ctx)}">
+      <div class="page-preview" style="${pageStyleStr(ctx)}">
+        <div style="font-size: ${ctx.sizePx * 0.78}px; letter-spacing: 0.18em; color: ${accent};">EXECUTIVE SUMMARY</div>
+        <h2 style="margin-top: 0.4em; font-size: ${ctx.sizePx * 1.8}px; font-weight: 700; letter-spacing: 0.02em; line-height: 1.4;">${escapeHtml(ctx.titleText)}</h2>
+        <div style="margin-top: 1.6em; font-size: ${ctx.sizePx * 1.05}px; line-height: 1.85; color: ${subColor};">${escapeHtml(ctx.leadText)}</div>
+        <div style="margin-top: 2em; padding-top: 1em; border-top: 1px solid ${ctx.bgMode === 'dark' ? '#333' : '#ddd'};">
+          <h3 style="font-size: ${ctx.sizePx * 1.0}px; font-weight: 700; letter-spacing: 0.06em; margin-bottom: 1em;">本年度のハイライト</h3>
+          <ol style="list-style: none; padding: 0; counter-reset: highlight;">
+            ${items.map(t => `<li style="counter-increment: highlight; display: flex; gap: 1em; padding: 0.5em 0; font-size: ${ctx.sizePx * 0.95}px; line-height: 1.6;"><span style="color: ${accent}; font-weight: 700; min-width: 1.4em;">·</span><span>${escapeHtml(t)}</span></li>`).join("")}
+          </ol>
+        </div>
+      </div>
+    </div>
+  `;
+  return pageWrap(label, idx, total, wrap);
+}
+
+function renderDataPage(label, idx, total, ctx) {
+  const subColor = ctx.bgMode === "dark" ? "#888" : "#555";
+  const accent = "#CC1400";
+  const rows = [
+    ["売上高", "12,847", "11,236", "+14.3%"],
+    ["営業利益", "1,892", "1,540", "+22.9%"],
+    ["純利益", "1,231", "987", "+24.7%"],
+    ["従業員数", "847", "812", "+4.3%"],
+    ["CO₂排出 (t)", "8,432", "10,283", "-18.0%"],
+  ];
+  const wrap = `
+    <div style="${pageWrapStyle(ctx)}">
+      <div class="page-preview" style="${pageStyleStr(ctx)}">
+        <div style="font-size: ${ctx.sizePx * 0.78}px; letter-spacing: 0.18em; color: ${accent};">DATA SHEET</div>
+        <h2 style="margin-top: 0.4em; font-size: ${ctx.sizePx * 1.5}px; font-weight: 700; margin-bottom: 1.4em;">主要指標 — Key Metrics</h2>
+        <table style="width: 100%; border-collapse: collapse; font-size: ${ctx.sizePx * 0.9}px; line-height: 1.6;">
+          <thead>
+            <tr style="border-bottom: 2px solid currentColor;">
+              <th style="text-align: left; padding: 0.5em 0; font-weight: 500; letter-spacing: 0.04em;">指標</th>
+              <th style="text-align: right; padding: 0.5em 0; font-family: monospace;">2026</th>
+              <th style="text-align: right; padding: 0.5em 0; color: ${subColor}; font-family: monospace;">2025</th>
+              <th style="text-align: right; padding: 0.5em 0; color: ${accent}; font-family: monospace;">YoY</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${rows.map(r => `<tr style="border-bottom: 1px dotted ${ctx.bgMode === 'dark' ? '#333' : '#ddd'};"><td style="padding: 0.6em 0;">${escapeHtml(r[0])}</td><td style="text-align: right; font-family: monospace;">${escapeHtml(r[1])}</td><td style="text-align: right; color: ${subColor}; font-family: monospace;">${escapeHtml(r[2])}</td><td style="text-align: right; color: ${accent}; font-family: monospace; font-weight: 700;">${escapeHtml(r[3])}</td></tr>`).join("")}
+          </tbody>
+        </table>
+        <div style="margin-top: 1.4em; font-size: ${ctx.sizePx * 0.78}px; color: ${subColor}; line-height: 1.7;">単位: 百万円。CO₂排出量はGHGプロトコルScope 1+2に基づく。第三者検証済み。</div>
+      </div>
+    </div>
+  `;
+  return pageWrap(label, idx, total, wrap);
+}
+
+function renderWorkImage(label, idx, total, ctx) {
+  const subColor = ctx.bgMode === "dark" ? "#888" : "#666";
+  const wrap = `
+    <div style="${pageWrapStyle(ctx)}">
+      <div class="page-preview" style="${pageStyleStr(ctx, { padTop: 0, padBottom: 0, padInner: 0, padOuter: 0 })}">
+        <div style="height: 75%; background: linear-gradient(135deg, #999 0%, #ccc 60%, #888 100%); display: flex; align-items: flex-end;"></div>
+        <div style="padding: ${ctx.top}mm ${ctx.outer}mm ${ctx.bottom}mm ${ctx.inner}mm;">
+          <div style="font-family: monospace; font-size: ${ctx.sizePx * 0.78}px; color: ${subColor}; letter-spacing: 0.06em;">PLATE 01</div>
+          <div style="margin-top: 0.4em; font-size: ${ctx.sizePx * 1.0}px; font-weight: 500;">${escapeHtml(ctx.titleText)}</div>
+          <div style="margin-top: 0.4em; font-size: ${ctx.sizePx * 0.82}px; color: ${subColor}; line-height: 1.7;">2024年, インクジェット・プリント, 600×900mm</div>
+        </div>
+      </div>
+    </div>
+  `;
+  return pageWrap(label, idx, total, wrap);
+}
+
+function renderWorkText(label, idx, total, ctx) {
+  return renderBodyPage(label, idx, total, ctx);
+}
+
+function renderEditorialNote(label, idx, total, ctx) {
+  return renderColumn(label, idx, total, ctx);
 }
 
 function downloadComposeHtml() {
