@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>紙面デザイン推奨 | EDD</title>
+<meta name="description" content="作りたい紙面を入力すると、AIがEDDの6,195レコードから最適な20パターンを選び、ミニチュア紙面サンプルとともに提示します">
+<link rel="icon" href="https://esse-sense.com/favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=Noto+Serif+JP:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #FFFFFF;
+  --text: #121212;
+  --text-secondary: #555555;
+  --text-muted: #999999;
+  --accent: #121212;
+  --accent-warm: #CC1400;
+  --border: #D9D9D9;
+  --border-light: #E8E8E6;
+  --surface: #F7F7F5;
+  --card: #FFFFFF;
+  --font: "Noto Sans JP", "Hiragino Sans", "Hiragino Kaku Gothic ProN", sans-serif;
+  --font-serif: "Noto Serif JP", "Hiragino Mincho ProN", Georgia, serif;
+  --radius: 0px;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #121212;
+    --text: #E0E0E0;
+    --text-secondary: #A0A0A0;
+    --text-muted: #666666;
+    --accent: #E0E0E0;
+    --accent-warm: #E05040;
+    --border: #333333;
+    --border-light: #2A2A2A;
+    --surface: #1A1A1A;
+    --card: #1E1E1E;
+  }
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  font-feature-settings: "palt";
+}
+.container { max-width: 960px; margin: 0 auto; padding: 0 24px; }
+
+header { border-bottom: 1px solid var(--border); padding: 60px 0 40px; }
+.brand {
+  font-family: var(--font);
+  font-size: 0.78rem;
+  letter-spacing: 0.18em;
+  color: var(--accent-warm);
+  font-weight: 500;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+}
+h1 {
+  font-family: var(--font-serif);
+  font-size: 2rem;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  margin-bottom: 16px;
+  line-height: 1.4;
+}
+.subtitle { font-size: 0.92rem; color: var(--text-secondary); line-height: 1.8; max-width: 720px; }
+
+nav {
+  position: sticky;
+  top: 0;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  padding: 12px 0;
+  z-index: 100;
+  font-size: 0.82rem;
+}
+nav ul { list-style: none; display: flex; gap: 24px; flex-wrap: wrap; }
+nav a {
+  color: var(--text-secondary);
+  text-decoration: none;
+  letter-spacing: 0.02em;
+  transition: color 0.2s;
+}
+nav a:hover, nav a.active { color: var(--accent-warm); }
+
+section { padding: 48px 0; border-bottom: 1px solid var(--border-light); }
+.section-header { margin-bottom: 8px; }
+.section-title {
+  font-family: var(--font-serif);
+  font-size: 1.4rem;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+}
+.section-subtitle {
+  display: block;
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+.section-description {
+  font-size: 0.86rem;
+  color: var(--text-secondary);
+  line-height: 1.8;
+  max-width: 720px;
+  margin: 16px 0 24px;
+}
+
+/* Form */
+.form-grid { display: grid; gap: 16px; max-width: 720px; }
+label { display: block; font-size: 0.78rem; color: var(--text-secondary); margin-bottom: 6px; letter-spacing: 0.02em; }
+textarea, input[type="text"], input[type="password"], select {
+  font-family: var(--font);
+  font-size: 0.9rem;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  border-radius: var(--radius);
+  width: 100%;
+}
+textarea { min-height: 110px; resize: vertical; line-height: 1.7; }
+textarea:focus, input:focus, select:focus {
+  outline: 1px solid var(--accent-warm);
+  outline-offset: -1px;
+  border-color: var(--accent-warm);
+}
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.field-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+@media (max-width: 640px) { .field-row, .field-row-3 { grid-template-columns: 1fr; } }
+.hint { font-size: 0.72rem; color: var(--text-muted); margin-top: 4px; line-height: 1.6; }
+.hint a { color: var(--accent-warm); }
+
+.actions { display: flex; gap: 12px; align-items: center; margin-top: 8px; flex-wrap: wrap; }
+.btn {
+  font-family: var(--font);
+  font-size: 0.86rem;
+  padding: 10px 24px;
+  border: 1px solid var(--accent-warm);
+  background: var(--accent-warm);
+  color: #FFFFFF;
+  cursor: pointer;
+  border-radius: var(--radius);
+  letter-spacing: 0.02em;
+  transition: opacity 0.15s;
+}
+.btn:hover:not(:disabled) { opacity: 0.85; }
+.btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.btn-secondary {
+  background: var(--bg);
+  color: var(--text);
+  border-color: var(--border);
+}
+.btn-secondary:hover:not(:disabled) { border-color: var(--accent-warm); color: var(--accent-warm); opacity: 1; }
+
+.status {
+  margin-top: 16px;
+  padding: 12px 14px;
+  border-left: 3px solid var(--accent-warm);
+  background: var(--surface);
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  display: none;
+}
+.status.show { display: block; }
+.status.error { border-left-color: #c62828; }
+
+/* Analysis result */
+.analysis-summary {
+  background: var(--surface);
+  border-left: 3px solid var(--accent-warm);
+  padding: 16px 18px;
+  font-size: 0.86rem;
+  line-height: 1.8;
+  margin: 24px 0 8px;
+  display: none;
+}
+.analysis-summary.show { display: block; }
+.analysis-summary h3 {
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  margin-bottom: 8px;
+}
+.tags-row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+.tag {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  padding: 2px 8px;
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+  letter-spacing: 0.02em;
+}
+.tag.accent { color: var(--accent-warm); border-color: var(--accent-warm); }
+
+/* Result cards */
+.results-meta {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin: 24px 0 12px;
+  letter-spacing: 0.02em;
+}
+.result-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1px;
+  background: var(--border-light);
+  border: 1px solid var(--border-light);
+}
+.result-card {
+  background: var(--card);
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.rank {
+  font-family: var(--font-serif);
+  font-size: 0.74rem;
+  font-weight: 900;
+  color: var(--accent-warm);
+  letter-spacing: 0.04em;
+}
+.result-card h3 {
+  font-family: var(--font-serif);
+  font-size: 0.96rem;
+  font-weight: 700;
+  line-height: 1.5;
+}
+.result-card .meta {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+.result-card .desc {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+.result-card .extra {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  padding-top: 10px;
+  border-top: 1px solid var(--border-light);
+  line-height: 1.7;
+}
+.score {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  font-family: var(--font);
+}
+
+/* SVG mini sample */
+.sample-frame {
+  background: var(--surface);
+  padding: 14px;
+  display: flex;
+  justify-content: center;
+  border: 1px solid var(--border-light);
+}
+.sample-frame svg { display: block; max-width: 100%; height: auto; }
+.spec-row {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  font-family: var(--font);
+  letter-spacing: 0.02em;
+}
+.spec-row span strong { color: var(--text-secondary); font-weight: 500; }
+
+footer {
+  padding: 40px 0 60px;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  text-align: center;
+  letter-spacing: 0.02em;
+}
+footer a { color: var(--accent-warm); text-decoration: none; border-bottom: 1px solid transparent; }
+footer a:hover { border-bottom-color: var(--accent-warm); }
+
+@media (max-width: 640px) {
+  nav ul { gap: 14px; font-size: 0.76rem; }
+  h1 { font-size: 1.5rem; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <div class="brand">EDITORIAL DESIGN KNOWLEDGE DB</div>
+    <h1>紙面デザイン推奨アプリ</h1>
+    <p class="subtitle">作りたい紙面を自由記述で入力すると、AIが内容を解析し、EDDの6,195レコードから最適な20パターンを選定。各パターンに判型・マージン・段組を可視化したミニチュア紙面サンプルを添えて提示します。</p>
+  </div>
+</header>
+
+<nav>
+  <div class="container">
+    <ul>
+      <li><a href="index.html">ダッシュボード</a></li>
+      <li><a href="recommend.html" class="active">紙面推奨</a></li>
+      <li><a href="https://github.com/yuyanishimura0312/editorial-design-db" target="_blank">GitHub</a></li>
+    </ul>
+  </div>
+</nav>
+
+<section id="form">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-title">入力</div>
+      <span class="section-subtitle">Describe what you want to make</span>
+    </div>
+    <p class="section-description">媒体・ジャンル・対象読者・トーン・予算など、思いつくまま自由に記述してください。情報が多いほど推奨精度が向上します。</p>
+
+    <div class="form-grid">
+      <div>
+        <label for="brief">作りたいものの概要（必須）</label>
+        <textarea id="brief" placeholder="例: 30代女性向けのライフスタイル雑誌を季刊で創刊したい。テーマは『暮らしと余白』。写真主導でテキストは控えめ、上質な紙質と少し古典的な書体で落ち着いた印象を狙う。発行部数3万部、想定単価1,200円。"></textarea>
+      </div>
+
+      <div class="field-row-3">
+        <div>
+          <label for="medium-hint">媒体（任意）</label>
+          <select id="medium-hint">
+            <option value="">指定なし（AIに任せる）</option>
+            <option value="book">書籍</option>
+            <option value="magazine">雑誌</option>
+            <option value="newspaper">新聞</option>
+            <option value="report">レポート・年次報告書</option>
+            <option value="catalog">カタログ・図録</option>
+            <option value="zine">ZINE</option>
+            <option value="pamphlet">パンフレット</option>
+          </select>
+        </div>
+        <div>
+          <label for="lang-hint">主な言語（任意）</label>
+          <select id="lang-hint">
+            <option value="">指定なし</option>
+            <option value="ja">日本語中心</option>
+            <option value="latin">欧文中心</option>
+            <option value="mixed">和欧混植</option>
+          </select>
+        </div>
+        <div>
+          <label for="region-hint">参照地域（任意）</label>
+          <select id="region-hint">
+            <option value="">指定なし</option>
+            <option value="Japan">日本</option>
+            <option value="USA">米国</option>
+            <option value="Europe">欧州</option>
+            <option value="UK">英国</option>
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <label for="apikey">Anthropic APIキー</label>
+        <input type="password" id="apikey" placeholder="sk-ant-..." autocomplete="off">
+        <p class="hint">入力されたキーはこのブラウザ（localStorage）にのみ保存され、外部送信は<a href="https://api.anthropic.com" target="_blank">api.anthropic.com</a>への直接呼び出しのみです。<br>キーを取得する: <a href="https://console.anthropic.com/settings/keys" target="_blank">Anthropic Console</a></p>
+      </div>
+
+      <div class="actions">
+        <button id="run-btn" class="btn">解析して推奨</button>
+        <button id="save-key-btn" class="btn btn-secondary">APIキーをこのブラウザに保存</button>
+        <button id="clear-key-btn" class="btn btn-secondary">保存したキーを削除</button>
+      </div>
+
+      <div id="status" class="status"></div>
+    </div>
+  </div>
+</section>
+
+<section id="result">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-title">解析と推奨</div>
+      <span class="section-subtitle">AI Analysis &amp; 20 Patterns</span>
+    </div>
+
+    <div id="analysis-summary" class="analysis-summary">
+      <h3>AI解析結果</h3>
+      <div id="analysis-text"></div>
+      <div id="analysis-tags" class="tags-row"></div>
+    </div>
+
+    <div class="results-meta" id="result-meta">未解析</div>
+    <div id="result-grid" class="result-grid"></div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <p>Editorial Design Knowledge DB · 6,195 records · 推奨アプリ</p>
+    <p>NPO法人ミラツク 西村勇也 編 ／ <a href="https://github.com/yuyanishimura0312/editorial-design-db" target="_blank">GitHub Source</a></p>
+  </div>
+</footer>
+
+<script src="recommend.js"></script>
+</body>
+</html>
