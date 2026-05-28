@@ -3,7 +3,7 @@
 
 export const config = { runtime: "edge" };
 
-const MODEL = "claude-opus-4-7";
+const MODEL = "claude-opus-4-8";
 const MAX_TOKENS = 1024;
 
 const ALLOWED_ORIGINS = [
