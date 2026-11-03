@@ -27,7 +27,7 @@ from datetime import datetime, timezone
 
 DB = os.path.expanduser("~/projects/research/editorial-design-db/data/editorial_design.db")
 SRC = "https://fonts.google.com/metadata/fonts"
-CACHE = "/private/tmp/claude-502/-Users-nishimura-/31c6d80b-a31c-4d87-b885-9ca5321c5592/scratchpad/dmdb/gf.json"
+CACHE = os.environ.get("GF_CACHE", "/private/tmp/claude-502/-Users-nishimura-/31c6d80b-a31c-4d87-b885-9ca5321c5592/scratchpad/dmdb/gf.json")
 
 # Google Fonts の category -> EDD classification
 CATEGORY = {
@@ -75,6 +75,8 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--refresh", action="store_true")
+    ap.add_argument("--include-hand-duplicates", action="store_true",
+                    help="also insert families that only exist as hand-entered rows (flag_fonts.py then marks the hand rows duplicate_name)")
     args = ap.parse_args()
 
     data = fetch(args.refresh)
@@ -97,8 +99,10 @@ def main() -> int:
     if dropped:
         print(f"[gf] ★CHECK 制約に無いため写像しない書字系: {', '.join(dropped)}（NULL のまま）")
 
-    existing = {norm(r[0]) for r in con.execute("SELECT name FROM fonts") if r[0]}
-    existing |= {norm(r[0]) for r in con.execute("SELECT name_native FROM fonts") if r[0]}
+    src_filter = " WHERE ingest_source='google-fonts-metadata'" if args.include_hand_duplicates else ""
+    existing = {norm(r[0]) for r in con.execute("SELECT name FROM fonts" + src_filter) if r[0]}
+    if not args.include_hand_duplicates:
+        existing |= {norm(r[0]) for r in con.execute("SELECT name_native FROM fonts") if r[0]}
 
     added = skipped_dup = 0
     rows = []
