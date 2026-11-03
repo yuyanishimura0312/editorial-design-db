@@ -11,8 +11,9 @@ fonts の手入力行に、機械で判別できる問題の印を付け、使�
   duplicate_name         同じ名前（小文字化）が複数行ある。google-fonts-metadata 行が在ればそれ以外に付ける
 
 ビュー v_fonts_usable
-  公式データで裏づけた行だけ: ingest_source='google-fonts-metadata' かつ source_url が在り、印が無い行。
-  手入力行は、制作元の公式ページで確かめるまでここに出さない（★確かめていないのであって、誤りと決めたのではない）。
+  公式データで裏づけた行だけ: Google Fonts 由来の行、または apply_font_verification.py が verified_official を
+  付けた手入力行で、source_url が在り、ほかの印が無い行。
+  確かめていない手入力行はここに出さない（★確かめていないのであって、誤りと決めたのではない）。
 
 冪等: set_by がこのスクリプトの印を消してから付け直す。
 """
@@ -71,8 +72,12 @@ with con:
     con.execute("drop view if exists v_fonts_usable")
     con.execute("""create view v_fonts_usable as
         select f.* from fonts f
-        where f.ingest_source = 'google-fonts-metadata' and coalesce(f.source_url, '') <> ''
-          and not exists (select 1 from acd_row_flag r where r.table_name = 'fonts' and r.row_id = f.id)""")
+        where coalesce(f.source_url, '') <> ''
+          and (f.ingest_source = 'google-fonts-metadata'
+               or exists (select 1 from acd_row_flag v where v.table_name = 'fonts' and v.row_id = f.id
+                          and v.flag = 'verified_official'))
+          and not exists (select 1 from acd_row_flag r where r.table_name = 'fonts' and r.row_id = f.id
+                          and r.flag <> 'verified_official')""")
 print("usable", con.execute("select count(*) from v_fonts_usable").fetchone()[0],
       "japanese usable", con.execute("select count(*) from v_fonts_usable where script_type='japanese'").fetchone()[0],
       "integrity", con.execute("pragma integrity_check").fetchone()[0])
